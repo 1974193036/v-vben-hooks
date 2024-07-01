@@ -27,9 +27,13 @@ export const basicProps = {
   // 配置所有 Row 的 style 样式
   baseRowStyle: {
     type: Object,
+    default: () => ({}),
   },
   // rowProps
-  rowProps: Object,
+  rowProps: {
+    type: Object,
+    default: () => ({}),
+  },
   // 配置所有选子项的 ColProps
   baseColProps: {
     type: Object,

@@ -1,4 +1,5 @@
 <script setup>
+import dayjs from 'dayjs'
 import BasicForm from './components/BasicForm/index.vue'
 
 const schemas = [
@@ -55,9 +56,14 @@ const schemas = [
     field: 'field3',
     component: 'DatePicker',
     label: '字段3',
+    // defaultValue: [dayjs().subtract(6, 'day'), dayjs()],
+    defaultValue: dayjs(),
     colProps: {
       span: 8,
     },
+    // componentProps: {
+    //   valueFormat: 'YYYY/MM/DD',
+    // },
   },
   {
     field: 'field4',
