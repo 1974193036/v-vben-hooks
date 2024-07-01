@@ -1,0 +1,23 @@
+{
+  "name": "v-vben-hooks",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "ant-design-vue": "^4.2.3",
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@shishuaiyun/eslint-config": "^0.0.5",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "vite": "^5.3.1"
+  }
+}
