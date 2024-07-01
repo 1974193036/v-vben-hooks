@@ -147,9 +147,17 @@ function handleEnterPress() {
           :all-default-values="defaultValueRef"
           :form-model="formModel"
           :set-form-model="setFormModel"
+          :is-advanced="true"
         >
-          <!-- <template v-for="item in Object.keys($slots)" #[item]="data">
+          <template v-for="item in Object.keys($slots)" #[item]="data">
             <slot :name="item" v-bind="data || {}" />
+          </template>
+          <!-- 相当于 -->
+          <!-- <template #code1="data">
+            <slot name="code1" v-bind="data || {a: 1}" />
+          </template>
+          <template #code2="data">
+            <slot name="code2" v-bind="data || {a: 2}" />
           </template> -->
         </FormItem>
 

@@ -29,26 +29,30 @@ export const basicProps = {
     type: Object,
     default: () => ({}),
   },
-  // rowProps
+  // 配置 Row 组件的 Props
   rowProps: {
     type: Object,
     default: () => ({}),
   },
-  // 配置所有选子项的 ColProps
-  baseColProps: {
-    type: Object,
-  },
+  // // 配置所有选子项的 ColProps
+  // baseColProps: {
+  //   type: Object,
+  //   default: () => ({}),
+  // },
   // label 标签布局
   labelCol: {
     type: Object,
+    default: () => ({}),
   },
   // 输入控件 布局样式
   wrapperCol: {
     type: Object,
+    default: () => ({}),
   },
   // 操作按钮外层 Col 组件配置，如果开启 showAdvancedButton，则不用设置
   actionColOptions: {
     type: Object,
+    default: () => ({}),
   },
   // 自动设置表单内组件的 placeholder，自定义组件需自行实现
   autoSetPlaceHolder: {

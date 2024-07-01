@@ -87,6 +87,26 @@ const schemas = [
       ],
     },
   },
+  {
+    field: 'code1',
+    component: 'Input',
+    label: 'code1',
+    colProps: { span: 24 },
+    slot: 'code1',
+    ifShow() {
+      return true
+    },
+  },
+  {
+    field: 'code2',
+    component: 'Input',
+    label: 'code2',
+    colProps: { span: 24 },
+    slot: 'code2',
+    show() {
+      return true
+    },
+  },
 ]
 
 function handleSubmit(values) {
@@ -105,6 +125,13 @@ function handleReset() {
       :action-col-options="{ span: 24 }"
       @submit="handleSubmit"
       @reset="handleReset"
-    />
+    >
+      <template #code1="{ a, model, field, disabled }">
+        <h1>code1 --{{ a }}</h1>
+      </template>
+      <template #code2="{ a, model, field, disabled }">
+        <h1>code2 --{{ a }}</h1>
+      </template>
+    </BasicForm>
   </div>
 </template>

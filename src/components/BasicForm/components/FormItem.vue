@@ -1,5 +1,7 @@
 <script lang="tsx">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, unref } from 'vue'
+import { isBoolean, isFunction } from 'lodash-es'
+import { componentMap } from '../componentMap'
 
 export default defineComponent({
   name: 'BasicFormItem',
@@ -34,8 +36,59 @@ export default defineComponent({
     },
   },
   setup(props, { slots }) {
+    const getValues = computed(() => {
+      const { allDefaultValues, formModel, schema } = props
+      return {
+        field: schema.field,
+        model: formModel,
+        values: {
+          ...allDefaultValues,
+          ...formModel,
+        },
+        schema,
+      }
+    })
+
+    function getShow() {
+      const { show, ifShow } = props.schema
+      const { showAdvancedButton } = props.formProps
+      const itemIsAdvanced = showAdvancedButton
+        ? isBoolean(props.isAdvanced)
+          ? props.isAdvanced
+          : true
+        : true
+
+      let isShow = true
+      let isIfShow = true
+
+      if (isBoolean(show))
+        isShow = show
+
+      if (isBoolean(ifShow))
+        isIfShow = ifShow
+
+      if (isFunction(show))
+        isShow = show(unref(getValues))
+
+      if (isFunction(ifShow))
+        isIfShow = ifShow(unref(getValues))
+
+      isShow = isShow && itemIsAdvanced
+      return { isShow, isIfShow }
+    }
+
     return () => {
-      return <div>123</div>
+      const { colProps = {}, slot, component } = props.schema
+      if (!((component && componentMap.has(component)) || slot))
+        return null
+
+      const { isIfShow, isShow } = getShow()
+
+      return isIfShow && (
+        <a-col {...colProps} v-show={isShow}>
+          123
+        </a-col>
+      )
     }
   },
 })
