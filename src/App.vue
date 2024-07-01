@@ -17,11 +17,12 @@ const schemas = [
     label: ({ model }) => {
       return `字段1${model.field3 ? model.field3 : ''}`
     },
+    helpMessage: ['Input组件', 'Input组件222'],
     colProps: {
       span: 8,
     },
     componentProps: ({ schema, formModel }) => {
-      console.log('form:', schema)
+      console.log('schema:', schema)
       console.log('formModel:', formModel)
       return {
         placeholder: '自定义placeholder',
@@ -120,7 +121,7 @@ function handleReset() {
 <template>
   <div style="margin: 50px 200px;">
     <BasicForm
-      :label-width="200"
+      :label-width="120"
       :schemas="schemas"
       :action-col-options="{ span: 24 }"
       @submit="handleSubmit"

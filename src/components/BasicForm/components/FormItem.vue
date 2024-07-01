@@ -1,7 +1,9 @@
 <script lang="tsx">
-import { computed, defineComponent, unref } from 'vue'
-import { isBoolean, isFunction } from 'lodash-es'
+import { computed, defineComponent, toRefs, unref } from 'vue'
+import { isBoolean, isFunction, isString } from 'lodash-es'
+import { InfoCircleOutlined } from '@ant-design/icons-vue'
 import { componentMap } from '../componentMap'
+import { useItemLabelWidth } from '../hooks/useItemLabelWidth'
 
 export default defineComponent({
   name: 'BasicFormItem',
@@ -36,6 +38,9 @@ export default defineComponent({
     },
   },
   setup(props, { slots }) {
+    const { schema, formProps } = toRefs(props)
+    const itemLabelWidthProp = useItemLabelWidth(schema, formProps)
+
     const getValues = computed(() => {
       const { allDefaultValues, formModel, schema } = props
       return {
@@ -47,6 +52,25 @@ export default defineComponent({
         },
         schema,
       }
+    })
+
+    const getComponentsProps = computed(() => {
+      const { schema, formModel, formActionType } = props
+      let { componentProps = {} } = schema
+      if (isFunction(componentProps))
+        componentProps = componentProps({ schema, formModel, formActionType }) ?? {}
+
+      if (schema.component === 'Divider') {
+        componentProps = Object.assign(
+          { type: 'horizontal' },
+          {
+            orientation: 'left',
+            plain: true,
+          },
+          componentProps,
+        )
+      }
+      return componentProps
     })
 
     function getShow() {
@@ -77,16 +101,88 @@ export default defineComponent({
       return { isShow, isIfShow }
     }
 
+    function renderLabelHelpMessage() {
+      const { label, helpMessage } = props.schema
+      const getLabel = isFunction(label) ? label(unref(getValues)) : label
+      const getHelpMessage = isFunction(helpMessage)
+        ? helpMessage(unref(getValues))
+        : helpMessage
+      if (!getHelpMessage || (Array.isArray(getHelpMessage) && getHelpMessage.length === 0))
+        return getLabel
+
+      const renderTitle = () => {
+        if (isString(getHelpMessage))
+          return <p>{getHelpMessage}</p>
+        if (Array.isArray(getHelpMessage)) {
+          return getHelpMessage.map((text) => {
+            return (
+              <p key={text} style="margin-bottom: 4px">
+                {text}
+              </p>
+            )
+          })
+        }
+        return <div>{getHelpMessage}</div>
+      }
+      return (
+        <span>
+          {getLabel}
+          <a-tooltip placement="top" title={renderTitle()}>
+            <span style="margin: 0 2px; cursor: pointer"><InfoCircleOutlined /></span>
+          </a-tooltip>
+        </span>
+      )
+    }
+
+    function renderItem() {
+      const { itemProps, slot, field, suffix, component } = props.schema
+      const { colon } = props.formProps
+      const showSuffix = !!suffix
+      const getSuffix = isFunction(suffix) ? suffix(unref(getValues)) : suffix
+      const { labelCol, wrapperCol } = unref(itemLabelWidthProp)
+
+      if (component === 'Divider') {
+        return (
+          <a-col span={24}>
+            <a-divider {...unref(getComponentsProps)}>{renderLabelHelpMessage()}</a-divider>
+          </a-col>
+        )
+      }
+
+      return (
+        <a-form-item
+          name={field}
+          colon={colon}
+          class={{ 'suffix-item': showSuffix }}
+          {...itemProps}
+          label={renderLabelHelpMessage()}
+          labelCol={labelCol}
+          wrapperCol={wrapperCol}
+        >
+          <div style="display:flex">
+            <div style="flex:1;">123</div>
+            {showSuffix && <span class="suffix" style="padding-left: 6px">{getSuffix}</span>}
+          </div>
+        </a-form-item>
+      )
+    }
+
     return () => {
+      console.log('=======render函数执行=======')
+
       const { colProps = {}, slot, component } = props.schema
       if (!((component && componentMap.has(component)) || slot))
         return null
 
       const { isIfShow, isShow } = getShow()
 
+      const getContent = () => {
+        return renderItem()
+      }
+
       return isIfShow && (
         <a-col {...colProps} v-show={isShow}>
-          123
+          {getContent()}
         </a-col>
       )
     }
