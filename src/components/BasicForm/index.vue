@@ -1,9 +1,10 @@
 <script setup>
-import { computed, reactive, ref, unref, useAttrs } from 'vue'
+import { computed, onMounted, reactive, ref, unref, useAttrs } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { basicProps } from './props'
 import { dateItemType } from './help'
 import FormItem from './components/FormItem.vue'
+import { useFormValues } from './hooks/useFormValues'
 import { deepMerge } from '@/utils/deepMerge'
 import { dateUtil } from '@/utils/dateUtil'
 
@@ -60,22 +61,6 @@ const getRow = computed(() => {
   }
 })
 
-const formActionType = {
-  getFieldsValue: () => {},
-  setFieldsValue: () => {},
-  resetFields: () => {},
-  updateSchema: () => {},
-  resetSchema: () => {},
-  setProps: () => {},
-  removeSchemaByField: () => {},
-  appendSchemaByField: () => {},
-  clearValidate: () => {},
-  validateFields: () => {},
-  validate: () => {},
-  submit: () => {},
-  scrollToField: () => {},
-}
-
 const getSchema = computed(() => {
   const schemas = unref(schemaRef) || unref(getProps).schemas
 
@@ -87,7 +72,7 @@ const getSchema = computed(() => {
         schema,
         tableAction: props.tableAction || {},
         formModel,
-        formActionType,
+        formActionType: {},
       }
       const valueFormat = typeof componentProps === 'function'
         ? componentProps(opt).valueFormat
@@ -114,6 +99,15 @@ const getSchema = computed(() => {
     return cloneDeep(schemas)
 })
 
+// handleFormValues(values): 处理值 去除空格、转换时间、处理key为数组或对象的情况
+// initDefault(): 设置初始值
+const { handleFormValues, initDefault } = useFormValues({
+  getProps,
+  defaultValueRef, // onMouted中执行initDefault()后，设置了默认值：defaultValueRef={xxx}
+  getSchema,
+  formModel, // onMouted中执行initDefault()后，设置了默认值：formModel.xxx=xx
+})
+
 function setFormModel(key, value, schema) {
   formModel[key] = value
   // eslint-disable-next-line vue/custom-event-name-casing
@@ -128,9 +122,36 @@ function handleEnterPress() {
   console.log('表单值', formModel)
 }
 
+const formActionType = {
+  getFieldsValue: () => {},
+  setFieldsValue: () => {},
+  resetFields: () => {},
+  updateSchema: () => {},
+  resetSchema: () => {},
+  setProps: () => {},
+  removeSchemaByField: () => {},
+  appendSchemaByField: () => {},
+  clearValidate: () => {},
+  validateFields: () => {},
+  validate: () => {},
+  submit: () => {},
+  scrollToField: () => {},
+}
+
+defineExpose({
+  ...formActionType,
+})
+
+onMounted(() => {
+  console.log('====onMounted====')
+  initDefault()
+  emit('register', formActionType)
+})
+
+// 测试的
 function test() {
-  formModel.field4 = '男'
-  // setFormModel('field4', '男', {})
+  // formModel.field4 = '男'
+  setFormModel('field4', '男', {})
 
   // schemaRef.value = [
   //   {

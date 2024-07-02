@@ -122,6 +122,9 @@ function handleSubmit(values) {
 function handleReset() {
   console.log('reset')
 }
+function regiser(formActionType) {
+  console.log(formActionType)
+}
 </script>
 
 <template>
@@ -130,6 +133,7 @@ function handleReset() {
       :label-width="120"
       :schemas="schemas"
       :action-col-options="{ span: 24 }"
+      @register="regiser"
       @submit="handleSubmit"
       @reset="handleReset"
     >
