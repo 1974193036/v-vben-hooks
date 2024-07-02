@@ -127,11 +127,11 @@ function handleReset() {
       @submit="handleSubmit"
       @reset="handleReset"
     >
-      <template #code1="{ a, model, field, disabled }">
-        <h1>code1 --{{ a }}</h1>
+      <template #code1="{ model, field, disabled }">
+        <h1>code1--{{ model }} - {{ field }} - {{ disabled }}</h1>
       </template>
-      <template #code2="{ a, model, field, disabled }">
-        <h1>code2 --{{ a }}</h1>
+      <template #code2="{ model, field, disabled }">
+        <h1>code2--{{ model }} - {{ field }} - {{ disabled }}</h1>
       </template>
     </BasicForm>
   </div>

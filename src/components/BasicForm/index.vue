@@ -18,10 +18,10 @@ const emit = defineEmits([
   'field-value-change',
 ])
 
-console.log('props', props)
+// console.log('props', props)
 
 const attrs = useAttrs()
-console.log('attrs', attrs)
+// console.log('attrs', attrs)
 
 const propsRef = ref({})
 const schemaRef = ref(null)
@@ -32,6 +32,7 @@ const formModel = reactive({}) // 表单绑定的值
 const getProps = computed(() => {
   return { ...props, ...unref(propsRef) }
 })
+// eslint-disable-next-line unused-imports/no-unused-vars, no-unused-vars
 function setProps(props) {
   propsRef.value = deepMerge(unref(propsRef) || {}, props)
 }
@@ -39,7 +40,7 @@ function setProps(props) {
 const getBindValue = computed(() => {
   return { ...attrs, ...props, ...unref(getProps) }
 })
-console.log('getBindValue', getBindValue)
+// console.log('getBindValue', getBindValue)
 
 const prefixCls = 'v-basic-form'
 const getFormClass = computed(() => {
@@ -128,7 +129,7 @@ function handleEnterPress() {
 }
 
 function test() {
-  // formModel.sex = '男'
+  formModel.sex = '男'
   // schemaRef.value = [
   //   {
   //     field: 'code1',
@@ -144,9 +145,9 @@ function test() {
   //   },
   // ]
   // defaultValueRef.value = {}
-  setProps({
-    labelWidth: 200,
-  })
+  // setProps({
+  //   labelWidth: 200,
+  // })
 }
 </script>
 

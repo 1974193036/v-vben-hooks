@@ -1,9 +1,10 @@
-<script lang="tsx">
+<script lang="jsx">
 import { computed, defineComponent, toRefs, unref } from 'vue'
 import { isBoolean, isFunction, isString } from 'lodash-es'
 import { InfoCircleOutlined } from '@ant-design/icons-vue'
 import { componentMap } from '../componentMap'
 import { useItemLabelWidth } from '../hooks/useItemLabelWidth'
+import { getSlot } from '@/utils/slot'
 
 export default defineComponent({
   name: 'BasicFormItem',
@@ -154,6 +155,11 @@ export default defineComponent({
       const getSuffix = isFunction(suffix) ? suffix(unref(getValues)) : suffix
       const { labelCol, wrapperCol } = unref(itemLabelWidthProp)
 
+      const opts = { disabled: false, readonly: false }
+      const getContent = () => {
+        return slot ? getSlot(slots, slot, unref(getValues), opts) : <span>222</span>
+      }
+
       return (
         <a-form-item
           name={field}
@@ -165,7 +171,7 @@ export default defineComponent({
           wrapperCol={wrapperCol}
         >
           <div style="display:flex">
-            <div style="flex:1;">123</div>
+            <div style="flex:1;">{getContent()}</div>
             {showSuffix && <span class="suffix" style="padding-left: 6px">{getSuffix}</span>}
           </div>
         </a-form-item>
@@ -181,13 +187,9 @@ export default defineComponent({
 
       const { isIfShow, isShow } = getShow()
 
-      const getContent = () => {
-        return renderItem()
-      }
-
       return isIfShow && (
         <a-col {...colProps} v-show={isShow}>
-          {getContent()}
+          {renderItem()}
         </a-col>
       )
     }
