@@ -79,6 +79,35 @@ export default defineComponent({
       return componentProps
     })
 
+    const getDisable = computed(() => {
+      const { disabled: globDisabled } = props.formProps
+      const { dynamicDisabled } = props.schema
+      const { disabled: itemDisabled = false } = unref(getComponentsProps)
+      let disabled = !!globDisabled || itemDisabled
+      if (isBoolean(dynamicDisabled))
+        disabled = dynamicDisabled
+
+      if (isFunction(dynamicDisabled))
+        disabled = dynamicDisabled(unref(getValues))
+
+      return disabled
+    })
+
+    const getReadonly = computed(() => {
+      const { readonly: globReadonly } = props.formProps
+      const { dynamicReadonly } = props.schema
+      const { readonly: itemReadonly = false } = unref(getComponentsProps)
+
+      let readonly = globReadonly || itemReadonly
+      if (isBoolean(dynamicReadonly))
+        readonly = dynamicReadonly
+
+      if (isFunction(dynamicReadonly))
+        readonly = dynamicReadonly(unref(getValues))
+
+      return readonly
+    })
+
     function getShow() {
       const { show, ifShow } = props.schema
       const { showAdvancedButton } = props.formProps
@@ -155,7 +184,7 @@ export default defineComponent({
       const getSuffix = isFunction(suffix) ? suffix(unref(getValues)) : suffix
       const { labelCol, wrapperCol } = unref(itemLabelWidthProp)
 
-      const opts = { disabled: false, readonly: false }
+      const opts = { disabled: unref(getDisable), readonly: unref(getReadonly) }
       const getContent = () => {
         return slot ? getSlot(slots, slot, unref(getValues), opts) : <span>222</span>
       }

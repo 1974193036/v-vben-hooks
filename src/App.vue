@@ -96,6 +96,10 @@ const schemas = [
     slot: 'code1',
     ifShow() {
       return true
+      // return values.sex === '男'
+    },
+    dynamicDisabled({ values }) {
+      return values.sex === '男'
     },
   },
   {
