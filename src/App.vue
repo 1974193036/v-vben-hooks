@@ -90,30 +90,30 @@ const schemas = [
       ],
     },
   },
-  {
-    field: 'code1',
-    component: 'Input',
-    label: 'code1',
-    colProps: { span: 24 },
-    slot: 'code1',
-    ifShow() {
-      return true
-      // return values.field4 === '男'
-    },
-    dynamicDisabled({ values }) {
-      return values.field4 === '男'
-    },
-  },
-  {
-    field: 'code2',
-    component: 'Input',
-    label: 'code2',
-    colProps: { span: 24 },
-    slot: 'code2',
-    show() {
-      return true
-    },
-  },
+  // {
+  //   field: 'code1',
+  //   component: 'Input',
+  //   label: 'code1',
+  //   colProps: { span: 24 },
+  //   slot: 'code1',
+  //   ifShow() {
+  //     return true
+  //     // return values.field4 === '男'
+  //   },
+  //   dynamicDisabled({ values }) {
+  //     return values.field4 === '男'
+  //   },
+  // },
+  // {
+  //   field: 'code2',
+  //   component: 'Input',
+  //   label: 'code2',
+  //   colProps: { span: 24 },
+  //   slot: 'code2',
+  //   show() {
+  //     return true
+  //   },
+  // },
 ]
 
 function handleSubmit(values) {
@@ -132,17 +132,24 @@ function regiser(formActionType) {
     <BasicForm
       :label-width="120"
       :schemas="schemas"
-      :action-col-options="{ span: 24 }"
+      :action-col-options="{ span: 16 }"
       @register="regiser"
       @submit="handleSubmit"
       @reset="handleReset"
     >
-      <template #code1="{ model, field, disabled }">
+      <!-- <template #code1="{ model, field, disabled }">
         <h1>code1--{{ model }} - {{ field }} - {{ disabled }}</h1>
       </template>
       <template #code2="{ model, field, disabled }">
         <h1>code2--{{ model }} - {{ field }} - {{ disabled }}</h1>
+      </template> -->
+
+      <!-- <template #resetBefore>
+        <a-button>resetBefore</a-button>
       </template>
+      <template #submitBefore>
+        <a-button>submitBefore</a-button>
+      </template> -->
     </BasicForm>
   </div>
 </template>

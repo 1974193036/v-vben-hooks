@@ -255,7 +255,7 @@ export default defineComponent({
           labelCol={labelCol}
           wrapperCol={wrapperCol}
         >
-          <div style="display:flex">
+          <div style="display:flex;align-items: center">
             <div style="flex:1;">{getContent()}</div>
             {showSuffix && <span class="suffix" style="padding-left: 6px">{getSuffix}</span>}
           </div>

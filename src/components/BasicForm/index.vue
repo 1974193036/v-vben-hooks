@@ -5,6 +5,8 @@ import { basicProps } from './props'
 import { dateItemType } from './help'
 import FormItem from './components/FormItem.vue'
 import { useFormValues } from './hooks/useFormValues'
+import FormAction from './components/FormAction.vue'
+import { createFormContext } from './hooks/useFormContext'
 import { deepMerge } from '@/utils/deepMerge'
 import { dateUtil } from '@/utils/dateUtil'
 
@@ -29,6 +31,13 @@ const schemaRef = ref(null)
 const defaultValueRef = ref({})
 const formElRef = ref() // a-form的实例对象
 const formModel = reactive({}) // 表单绑定的值
+
+const advanceState = reactive({
+  isAdvanced: true,
+  hideAdvanceBtn: false,
+  isLoad: false,
+  actionSpan: 6,
+})
 
 const getProps = computed(() => {
   return { ...props, ...unref(propsRef) }
@@ -122,6 +131,8 @@ function handleEnterPress() {
   console.log('表单值', formModel)
 }
 
+const getFormActionBindProps = computed(() => ({ ...getProps.value, ...advanceState }))
+
 const formActionType = {
   getFieldsValue: () => {},
   setFieldsValue: () => {},
@@ -137,6 +148,15 @@ const formActionType = {
   submit: () => {},
   scrollToField: () => {},
 }
+
+createFormContext({
+  resetAction: () => {
+    console.log('重置')
+  },
+  submitAction: () => {
+    console.log('查询')
+  },
+})
 
 defineExpose({
   ...formActionType,
@@ -209,10 +229,16 @@ function test() {
             <slot name="code2" v-bind="data || {a: 2}" />
           </template> -->
         </FormItem>
-
-        <!-- 按钮区域 -->
-        <!-- TODO -->
       </template>
+      <!-- 按钮区域 -->
+      <FormAction v-bind="getFormActionBindProps">
+        <template
+          v-for="item in ['resetBefore', 'submitBefore']"
+          #[item]="data"
+        >
+          <slot :name="item" v-bind="data || {}" />
+        </template>
+      </FormAction>
     </a-row>
   </a-form>
 </template>
