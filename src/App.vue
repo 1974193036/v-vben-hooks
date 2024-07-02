@@ -119,6 +119,9 @@ const schemas = [
 function handleSubmit(values) {
   console.log('values', values)
 }
+function beforeResetForm() {
+  console.log('重置表单行为前执行自定义重置按钮逻辑')
+}
 function handleReset() {
   console.log('reset')
 }
@@ -133,6 +136,7 @@ function regiser(formActionType) {
       :label-width="120"
       :schemas="schemas"
       :action-col-options="{ span: 16 }"
+      :reset-func="beforeResetForm"
       @register="regiser"
       @submit="handleSubmit"
       @reset="handleReset"

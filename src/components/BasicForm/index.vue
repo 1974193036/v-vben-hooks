@@ -7,6 +7,7 @@ import FormItem from './components/FormItem.vue'
 import { useFormValues } from './hooks/useFormValues'
 import FormAction from './components/FormAction.vue'
 import { createFormContext } from './hooks/useFormContext'
+import { useFormEvents } from './hooks/useFormEvents'
 import { deepMerge } from '@/utils/deepMerge'
 import { dateUtil } from '@/utils/dateUtil'
 
@@ -108,13 +109,27 @@ const getSchema = computed(() => {
     return cloneDeep(schemas)
 })
 
-// handleFormValues(values): 处理值 去除空格、转换时间、处理key为数组或对象的情况
+// handleFormValues(values): 处理值: 去除空格、转换时间、处理key为数组或对象的情况
 // initDefault(): 设置初始值
 const { handleFormValues, initDefault } = useFormValues({
   getProps,
-  defaultValueRef, // onMouted中执行initDefault()后，设置了默认值：defaultValueRef={xxx}
+  defaultValueRef, // onMouted中执行initDefault()后，设置了默认初始值：defaultValueRef={xxx}
   getSchema,
-  formModel, // onMouted中执行initDefault()后，设置了默认值：formModel.xxx=xx
+  formModel, // onMouted中执行initDefault()后，设置了默认初始值：formModel.xxx=xx
+})
+
+const {
+  handleSubmit,
+  resetFields,
+} = useFormEvents({
+  emit,
+  getProps,
+  formModel,
+  getSchema,
+  defaultValueRef,
+  formElRef,
+  schemaRef,
+  handleFormValues,
 })
 
 function setFormModel(key, value, schema) {
@@ -150,12 +165,8 @@ const formActionType = {
 }
 
 createFormContext({
-  resetAction: () => {
-    console.log('重置')
-  },
-  submitAction: () => {
-    console.log('查询')
-  },
+  resetAction: resetFields,
+  submitAction: handleSubmit,
 })
 
 defineExpose({

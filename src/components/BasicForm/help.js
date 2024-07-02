@@ -36,3 +36,11 @@ export function createPlaceholderMessage(component) {
 
   return ''
 }
+
+export const defaultValueComponents = [
+  'Input',
+  'InputPassword',
+  'InputNumber',
+  'InputSearch',
+  'InputTextArea',
+]
