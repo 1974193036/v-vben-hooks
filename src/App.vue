@@ -21,8 +21,10 @@ const schemas = [
     colProps: {
       span: 8,
     },
-    componentProps: ({ schema, formModel }) => {
-      console.log('schema:', schema)
+    // dynamicDisabled({ values }) {
+    //   return values.field4 === '男'
+    // },
+    componentProps: ({ formModel }) => {
       console.log('formModel:', formModel)
       return {
         placeholder: '自定义placeholder',
@@ -76,14 +78,14 @@ const schemas = [
     componentProps: {
       options: [
         {
-          label: '选项1',
-          value: '1',
-          key: '1',
+          label: '男',
+          value: '男',
+          key: '男',
         },
         {
-          label: '选项2',
-          value: '2',
-          key: '2',
+          label: '女',
+          value: '女',
+          key: '女',
         },
       ],
     },
@@ -96,10 +98,10 @@ const schemas = [
     slot: 'code1',
     ifShow() {
       return true
-      // return values.sex === '男'
+      // return values.field4 === '男'
     },
     dynamicDisabled({ values }) {
-      return values.sex === '男'
+      return values.field4 === '男'
     },
   },
   {

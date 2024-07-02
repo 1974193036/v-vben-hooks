@@ -1,9 +1,10 @@
 <script lang="jsx">
 import { computed, defineComponent, toRefs, unref } from 'vue'
-import { isBoolean, isFunction, isString } from 'lodash-es'
+import { isBoolean, isFunction, isString, upperFirst } from 'lodash-es'
 import { InfoCircleOutlined } from '@ant-design/icons-vue'
 import { componentMap } from '../componentMap'
 import { useItemLabelWidth } from '../hooks/useItemLabelWidth'
+import { createPlaceholderMessage, isComponentFormSchema } from '../help'
 import { getSlot } from '@/utils/slot'
 
 export default defineComponent({
@@ -61,6 +62,7 @@ export default defineComponent({
     })
 
     const getComponentsProps = computed(() => {
+      console.log('getComponentsProps', props.schema.field)
       const { schema, formModel, formActionType } = props
       let { componentProps = {} } = schema
       if (isFunction(componentProps))
@@ -80,6 +82,7 @@ export default defineComponent({
     })
 
     const getDisable = computed(() => {
+      console.log('getDisable')
       const { disabled: globDisabled } = props.formProps
       const { dynamicDisabled } = props.schema
       const { disabled: itemDisabled = false } = unref(getComponentsProps)
@@ -169,6 +172,59 @@ export default defineComponent({
       )
     }
 
+    function renderComponent() {
+      if (!isComponentFormSchema(props.schema))
+        return null
+
+      const {
+        component,
+        field,
+        changeEvent = 'change',
+      } = props.schema
+      const isCheck = component && ['Switch', 'Checkbox'].includes(component)
+      const eventKey = `on${upperFirst(changeEvent)}`
+      const { autoSetPlaceHolder, size } = props.formProps
+      const propsData = {
+        allowClear: true,
+        size,
+        ...unref(getComponentsProps),
+        disabled: unref(getDisable),
+        readonly: unref(getReadonly),
+      }
+
+      const isCreatePlaceholder = !propsData.disabled && autoSetPlaceHolder
+      // RangePicker place is an array
+      if (isCreatePlaceholder && component !== 'RangePicker' && component !== 'DatePickerRange' && component) {
+        propsData.placeholder
+            = unref(getComponentsProps)?.placeholder || createPlaceholderMessage(component)
+      }
+
+      const bindValue = {
+        [(isCheck ? 'checked' : 'value')]: props.formModel[field],
+      }
+
+      const on = {
+        [eventKey]: (...args) => {
+          const [e] = args
+          if (propsData[eventKey])
+            propsData[eventKey](...args)
+
+          const target = e ? e.target : null
+          const value = target ? (isCheck ? target.checked : target.value) : e
+          props.setFormModel(field, value, props.schema)
+        },
+      }
+
+      const Comp = componentMap.get(component)
+      const compAttr = {
+        ...propsData,
+        ...on,
+        ...bindValue,
+      }
+
+      return <Comp {...compAttr} />
+    }
+
     function renderItem() {
       const { itemProps, slot, field, suffix, component } = props.schema
       if (component === 'Divider') {
@@ -186,7 +242,7 @@ export default defineComponent({
 
       const opts = { disabled: unref(getDisable), readonly: unref(getReadonly) }
       const getContent = () => {
-        return slot ? getSlot(slots, slot, unref(getValues), opts) : <span>222</span>
+        return slot ? getSlot(slots, slot, unref(getValues), opts) : renderComponent()
       }
 
       return (

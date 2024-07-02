@@ -129,7 +129,9 @@ function handleEnterPress() {
 }
 
 function test() {
-  formModel.sex = '男'
+  formModel.field4 = '男'
+  // setFormModel('field4', '男', {})
+
   // schemaRef.value = [
   //   {
   //     field: 'code1',
