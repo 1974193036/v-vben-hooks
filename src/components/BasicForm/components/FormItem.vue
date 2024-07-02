@@ -38,7 +38,12 @@ export default defineComponent({
     },
   },
   setup(props, { slots }) {
+    // console.log('props', props)
     const { schema, formProps } = toRefs(props)
+    // 当父组件更改了props.formProps 或 props.schema，这两个原本不是响应式数据的，无法被computed监听到，解决方式如下
+    // deprecated: useItemLabelWidth(props.schema, props.formProps)
+    // 1. 通过watch监听来实现，watch([() => props.schema, () => props.formProps])
+    // 2. toRefs解构props，把这两个属性包裹成ref对象，使其和原对象产生链接；当props上的这两个属性值发生变化，schema.value或formProps.value也会改变，就被computed监听到了
     const itemLabelWidthProp = useItemLabelWidth(schema, formProps)
 
     const getValues = computed(() => {
@@ -136,11 +141,6 @@ export default defineComponent({
 
     function renderItem() {
       const { itemProps, slot, field, suffix, component } = props.schema
-      const { colon } = props.formProps
-      const showSuffix = !!suffix
-      const getSuffix = isFunction(suffix) ? suffix(unref(getValues)) : suffix
-      const { labelCol, wrapperCol } = unref(itemLabelWidthProp)
-
       if (component === 'Divider') {
         return (
           <a-col span={24}>
@@ -148,6 +148,11 @@ export default defineComponent({
           </a-col>
         )
       }
+
+      const { colon } = props.formProps
+      const showSuffix = !!suffix
+      const getSuffix = isFunction(suffix) ? suffix(unref(getValues)) : suffix
+      const { labelCol, wrapperCol } = unref(itemLabelWidthProp)
 
       return (
         <a-form-item
@@ -168,7 +173,7 @@ export default defineComponent({
     }
 
     return () => {
-      console.log('=======render函数执行=======')
+      console.log('=======render函数执行=======', props.schema)
 
       const { colProps = {}, slot, component } = props.schema
       if (!((component && componentMap.has(component)) || slot))

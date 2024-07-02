@@ -23,14 +23,14 @@ console.log('props', props)
 const attrs = useAttrs()
 console.log('attrs', attrs)
 
-const propsRef = ref(null)
+const propsRef = ref({})
 const schemaRef = ref(null)
 const defaultValueRef = ref({})
 const formElRef = ref() // a-form的实例对象
 const formModel = reactive({}) // 表单绑定的值
 
 const getProps = computed(() => {
-  return { ...props, ...propsRef }
+  return { ...props, ...unref(propsRef) }
 })
 function setProps(props) {
   propsRef.value = deepMerge(unref(propsRef) || {}, props)
@@ -126,9 +126,35 @@ function setFormModel(key, value, schema) {
 function handleEnterPress() {
   console.log('表单值', formModel)
 }
+
+function test() {
+  // formModel.sex = '男'
+  // schemaRef.value = [
+  //   {
+  //     field: 'code1',
+  //     component: 'Input',
+  //     label: 'code1',
+  //     colProps: { span: 24 },
+  //   },
+  //   {
+  //     field: 'code2',
+  //     component: 'Input',
+  //     label: 'code2',
+  //     colProps: { span: 24 },
+  //   },
+  // ]
+  // defaultValueRef.value = {}
+  setProps({
+    labelWidth: 200,
+  })
+}
 </script>
 
 <template>
+  <a-button @click="test">
+    test
+  </a-button>
+  {{ getProps }}
   <a-form
     v-bind="getBindValue"
     ref="formElRef"

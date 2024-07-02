@@ -11,7 +11,7 @@ export function useItemLabelWidth(schemaItemRef, propsRef) {
       labelCol: globalLabelCol,
       wrapperCol: globWrapperCol,
       layout,
-    } = propsRef
+    } = unref(propsRef)
 
     let width = labelWidth || globalLabelWidth
     const _labelCol = { ...globalLabelCol, ...labelCol }
