@@ -154,7 +154,6 @@ function test() {
   <a-button @click="test">
     test
   </a-button>
-  {{ getProps }}
   <a-form
     v-bind="getBindValue"
     ref="formElRef"
