@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, reactive, ref, unref, useAttrs } from 'vue'
+import { computed, onMounted, reactive, ref, unref, useAttrs, watch } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { basicProps } from './props'
 import { dateItemType } from './help'
@@ -32,6 +32,7 @@ const schemaRef = ref(null)
 const defaultValueRef = ref({})
 const formElRef = ref() // a-form的实例对象
 const formModel = reactive({}) // 表单绑定的值
+const isInitedDefaultRef = ref(false)
 
 const advanceState = reactive({
   isAdvanced: true,
@@ -58,6 +59,7 @@ const getFormClass = computed(() => {
   return [
     prefixCls,
     {
+      // 紧凑类型表单，写样式，减少 margin-bottom
       [`${prefixCls}--compact`]: unref(getProps).compact,
     },
   ]
@@ -191,8 +193,21 @@ defineExpose({
   ...formActionType,
 })
 
+watch(
+  () => getSchema.value,
+  (schema) => {
+    if (unref(isInitedDefaultRef))
+      return
+
+    if (schema?.length) {
+      initDefault()
+      isInitedDefaultRef.value = true
+    }
+  },
+)
+
 onMounted(() => {
-  console.log('====onMounted====')
+  // console.log('====onMounted====')
   initDefault()
   emit('register', formActionType)
 })

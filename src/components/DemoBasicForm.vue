@@ -1,6 +1,6 @@
 <script setup>
 import dayjs from 'dayjs'
-import BasicForm from './BasicForm/index.vue'
+import { BasicForm } from './BasicForm'
 
 const schemas = [
   {
@@ -24,8 +24,8 @@ const schemas = [
     // dynamicDisabled({ values }) {
     //   return values.field4 === '男'
     // },
-    componentProps: ({ formModel }) => {
-      console.log('formModel:', formModel)
+    componentProps: () => {
+      // console.log('formModel:', formModel)
       return {
         placeholder: '自定义placeholder',
         onChange: (e) => {
@@ -132,7 +132,7 @@ function handleReset() {
 }
 let __resetFields, __getFieldsValue, __setFieldsValue, __setProps, __appendSchemaByField, __removeSchemaByField, __updateSchema, __resetSchema
 function regiser(formActionType) {
-  console.log(formActionType)
+  // console.log(formActionType)
   const { resetFields, getFieldsValue, setFieldsValue, setProps, appendSchemaByField, removeSchemaByField, updateSchema, resetSchema } = formActionType
   __resetFields = resetFields
   __getFieldsValue = getFieldsValue

@@ -62,7 +62,7 @@ export default defineComponent({
     })
 
     const getComponentsProps = computed(() => {
-      console.log('getComponentsProps', props.schema.field)
+      // console.log('getComponentsProps', props.schema.field)
       const { schema, formModel, formActionType } = props
       let { componentProps = {} } = schema
       if (isFunction(componentProps))
@@ -82,7 +82,7 @@ export default defineComponent({
     })
 
     const getDisable = computed(() => {
-      console.log('getDisable')
+      // console.log('getDisable')
       const { disabled: globDisabled } = props.formProps
       const { dynamicDisabled } = props.schema
       const { disabled: itemDisabled = false } = unref(getComponentsProps)
@@ -329,7 +329,7 @@ export default defineComponent({
     }
 
     return () => {
-      console.log('=======render函数执行=======', props.schema)
+      // console.log('=======render函数执行=======', props.schema)
 
       const { colProps = {}, slot, component } = props.schema
       if (!((component && componentMap.has(component)) || slot))
