@@ -194,6 +194,26 @@ defineExpose({
 })
 
 watch(
+  () => unref(getProps).model,
+  () => {
+    const { model } = unref(getProps)
+    if (!model)
+      return
+    setFieldsValue(model)
+  },
+  {
+    immediate: true,
+  },
+)
+
+watch(
+  () => props.schemas,
+  (schemas) => {
+    resetSchema(schemas ?? [])
+  },
+)
+
+watch(
   () => getSchema.value,
   (schema) => {
     if (unref(isInitedDefaultRef))
