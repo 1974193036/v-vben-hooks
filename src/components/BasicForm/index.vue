@@ -129,6 +129,8 @@ const {
   scrollToField,
   appendSchemaByField,
   removeSchemaByField,
+  updateSchema,
+  resetSchema,
 } = useFormEvents({
   emit,
   getProps,
@@ -176,8 +178,8 @@ const formActionType = {
   scrollToField,
   appendSchemaByField,
   removeSchemaByField,
-  // updateSchema: () => {},
-  // resetSchema: () => {},
+  updateSchema,
+  resetSchema,
 }
 
 createFormContext({

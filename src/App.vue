@@ -130,16 +130,18 @@ function beforeResetForm() {
 function handleReset() {
   console.log('reset')
 }
-let __resetFields, __getFieldsValue, __setFieldsValue, __setProps, __appendSchemaByField, __removeSchemaByField
+let __resetFields, __getFieldsValue, __setFieldsValue, __setProps, __appendSchemaByField, __removeSchemaByField, __updateSchema, __resetSchema
 function regiser(formActionType) {
   console.log(formActionType)
-  const { resetFields, getFieldsValue, setFieldsValue, setProps, appendSchemaByField, removeSchemaByField } = formActionType
+  const { resetFields, getFieldsValue, setFieldsValue, setProps, appendSchemaByField, removeSchemaByField, updateSchema, resetSchema } = formActionType
   __resetFields = resetFields
   __getFieldsValue = getFieldsValue
   __setFieldsValue = setFieldsValue
   __setProps = setProps
   __appendSchemaByField = appendSchemaByField
   __removeSchemaByField = removeSchemaByField
+  __updateSchema = updateSchema
+  __resetSchema = resetSchema
 }
 function resetForm() {
   __resetFields()
@@ -185,6 +187,27 @@ function setFormValues() {
       @click="__removeSchemaByField('field5')"
     >
       删除schema
+    </a-button>
+    <a-button
+      @click="__updateSchema({
+        field: 'field1',
+        componentProps: { disabled: true },
+      })"
+    >
+      更新schema
+    </a-button>
+    <a-button
+      @click="__resetSchema([{
+        field: 'field1',
+        label: '字段1',
+        component: 'Input',
+      }, {
+        field: 'field2',
+        label: '字段2',
+        component: 'Input',
+      }])"
+    >
+      重置schema
     </a-button>
     <BasicForm
       :label-width="120"

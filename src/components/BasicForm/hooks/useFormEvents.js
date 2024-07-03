@@ -1,7 +1,8 @@
 import { nextTick, toRaw, unref } from 'vue'
-import { cloneDeep, get, isArray, isFunction, isNil, isObject, isString, isUndefined, set } from 'lodash-es'
+import { cloneDeep, get, isArray, isFunction, isNil, isObject, isString, isUndefined, set, uniqBy } from 'lodash-es'
 import { dateItemType, defaultValueComponents, handleInputNumberValue } from '../help'
 import { dateUtil } from '@/utils/dateUtil'
+import { deepMerge } from '@/utils/deepMerge'
 
 function tryConstructArray(field, values) {
   const pattern = /^\[(.+)\]$/
@@ -292,6 +293,67 @@ export function useFormEvents({
     }
   }
 
+  /**
+   * 更新表单的 schema, 只更新函数所传的参数
+   */
+  async function updateSchema(data) {
+    let updateData = []
+    if (isObject(data))
+      updateData.push(data)
+
+    if (isArray(data))
+      updateData = [...data]
+
+    const hasField = updateData.every(
+      item => item.component === 'Divider' || (Reflect.has(item, 'field') && item.field),
+    )
+
+    if (!hasField) {
+      console.error(
+        'All children of the form Schema array that need to be updated must contain the `field` field',
+      )
+      return
+    }
+    const schema = []
+    const updatedSchema = []
+    unref(getSchema).forEach((val) => {
+      const updatedItem = updateData.find(item => item.field === val.field)
+
+      if (updatedItem) {
+        const newSchema = deepMerge(val, updatedItem)
+        updatedSchema.push(newSchema)
+        schema.push(newSchema)
+      }
+      else {
+        schema.push(val)
+      }
+    })
+    _setDefaultValue(updatedSchema)
+
+    schemaRef.value = uniqBy(schema, 'field')
+  }
+
+  async function resetSchema(data) {
+    let updateData = []
+    if (isObject(data))
+      updateData.push(data)
+
+    if (isArray(data))
+      updateData = [...data]
+
+    const hasField = updateData.every(
+      item => item.component === 'Divider' || (Reflect.has(item, 'field') && item.field),
+    )
+
+    if (!hasField) {
+      console.error(
+        'All children of the form Schema array that need to be updated must contain the `field` field',
+      )
+      return
+    }
+    schemaRef.value = updateData
+  }
+
   const formActionType = {
     resetFields,
     submit: handleSubmit,
@@ -303,6 +365,8 @@ export function useFormEvents({
     scrollToField,
     appendSchemaByField,
     removeSchemaByField,
+    updateSchema,
+    resetSchema,
   }
 
   return {
@@ -316,6 +380,8 @@ export function useFormEvents({
     scrollToField,
     appendSchemaByField,
     removeSchemaByField,
+    updateSchema,
+    resetSchema,
   }
 }
 
