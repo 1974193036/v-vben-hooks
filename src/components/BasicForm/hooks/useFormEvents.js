@@ -1,5 +1,5 @@
 import { nextTick, toRaw, unref } from 'vue'
-import { cloneDeep, get, isDef, isFunction, set } from 'lodash-es'
+import { cloneDeep, get, isFunction, isUndefined, set } from 'lodash-es'
 import { dateItemType, defaultValueComponents, handleInputNumberValue } from '../help'
 import { dateUtil } from '@/utils/dateUtil'
 
@@ -179,14 +179,14 @@ export function useFormEvents({
         nestKeyArray.forEach((nestKey) => {
           try {
             const value = nestKey.split('.').reduce((out, item) => out[item], values)
-            if (isDef(value)) {
+            if (!isUndefined(value)) {
               unref(formModel)[nestKey] = unref(value)
               validKeys.push(nestKey)
             }
           }
           catch (e) {
             // key not exist
-            if (isDef(defaultValueRef.value[nestKey]))
+            if (!isUndefined(defaultValueRef.value[nestKey]))
               unref(formModel)[nestKey] = cloneDeep(unref(defaultValueRef.value[nestKey]))
           }
         })

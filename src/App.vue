@@ -130,18 +130,25 @@ function beforeResetForm() {
 function handleReset() {
   console.log('reset')
 }
-let __resetFields, __getFieldsValue
+let __resetFields, __getFieldsValue, __setFieldsValue, __setProps
 function regiser(formActionType) {
   console.log(formActionType)
-  const { resetFields, getFieldsValue } = formActionType
+  const { resetFields, getFieldsValue, setFieldsValue, setProps } = formActionType
   __resetFields = resetFields
   __getFieldsValue = getFieldsValue
+  __setFieldsValue = setFieldsValue
+  __setProps = setProps
 }
 function resetForm() {
   __resetFields()
 }
 function getFormValues() {
   console.log(__getFieldsValue())
+}
+function setFormValues() {
+  __setFieldsValue({
+    field1: 'hello',
+  })
 }
 </script>
 
@@ -152,6 +159,12 @@ function getFormValues() {
     </a-button>
     <a-button @click="getFormValues">
       手动获取表单值
+    </a-button>
+    <a-button @click="setFormValues">
+      手动设置表单值
+    </a-button>
+    <a-button @click="__setProps({ labelWidth: 250 })">
+      更改labelWidth
     </a-button>
     <BasicForm
       :label-width="120"

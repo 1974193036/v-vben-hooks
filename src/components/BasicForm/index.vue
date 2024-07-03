@@ -43,7 +43,7 @@ const advanceState = reactive({
 const getProps = computed(() => {
   return { ...props, ...unref(propsRef) }
 })
-// eslint-disable-next-line unused-imports/no-unused-vars, no-unused-vars
+
 function setProps(props) {
   propsRef.value = deepMerge(unref(propsRef) || {}, props)
 }
@@ -169,9 +169,9 @@ const formActionType = {
   validateFields,
   getFieldsValue,
   setFieldsValue,
+  setProps,
   // updateSchema: () => {},
   // resetSchema: () => {},
-  // setProps: () => {},
   // removeSchemaByField: () => {},
   // appendSchemaByField: () => {},
   // scrollToField: () => {},
