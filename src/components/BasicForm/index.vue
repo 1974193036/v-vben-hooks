@@ -119,8 +119,13 @@ const { handleFormValues, initDefault } = useFormValues({
 })
 
 const {
-  handleSubmit,
   resetFields,
+  handleSubmit,
+  clearValidate,
+  validate,
+  validateFields,
+  getFieldsValue,
+  setFieldsValue,
 } = useFormEvents({
   emit,
   getProps,
@@ -137,8 +142,8 @@ function setFormModel(key, value, schema) {
   // eslint-disable-next-line vue/custom-event-name-casing
   emit('field-value-change', key, value)
   if (schema && schema.itemProps && !schema.itemProps.autoLink) {
-    // TODO: 这里如果是autoLink=false手动关联的情况下才会再次触发此函数
-    // validateFields([key]).catch((_) => {})
+    // 这里如果是autoLink=false手动关联的情况下才会再次触发此函数
+    validateFields([key]).catch((_) => {})
   }
 }
 
@@ -157,19 +162,19 @@ function handleEnterPress(e) {
 const getFormActionBindProps = computed(() => ({ ...getProps.value, ...advanceState }))
 
 const formActionType = {
-  getFieldsValue: () => {},
-  setFieldsValue: () => {},
   resetFields,
-  updateSchema: () => {},
-  resetSchema: () => {},
-  setProps: () => {},
-  removeSchemaByField: () => {},
-  appendSchemaByField: () => {},
-  clearValidate: () => {},
-  validateFields: () => {},
-  validate: () => {},
   submit: handleSubmit,
-  scrollToField: () => {},
+  clearValidate,
+  validate,
+  validateFields,
+  getFieldsValue,
+  setFieldsValue,
+  // updateSchema: () => {},
+  // resetSchema: () => {},
+  // setProps: () => {},
+  // removeSchemaByField: () => {},
+  // appendSchemaByField: () => {},
+  // scrollToField: () => {},
 }
 
 createFormContext({

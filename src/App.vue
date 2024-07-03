@@ -130,14 +130,18 @@ function beforeResetForm() {
 function handleReset() {
   console.log('reset')
 }
-let __resetFields
+let __resetFields, __getFieldsValue
 function regiser(formActionType) {
   console.log(formActionType)
-  const { resetFields } = formActionType
+  const { resetFields, getFieldsValue } = formActionType
   __resetFields = resetFields
+  __getFieldsValue = getFieldsValue
 }
 function resetForm() {
   __resetFields()
+}
+function getFormValues() {
+  console.log(__getFieldsValue())
 }
 </script>
 
@@ -145,6 +149,9 @@ function resetForm() {
   <div style="margin: 50px 200px;">
     <a-button @click="resetForm">
       手动重置表单
+    </a-button>
+    <a-button @click="getFormValues">
+      手动获取表单值
     </a-button>
     <BasicForm
       :label-width="120"

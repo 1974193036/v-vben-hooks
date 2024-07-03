@@ -1,3 +1,5 @@
+import { isNumber } from 'lodash-es'
+
 export const dateItemType = [
   'DatePicker',
   'MonthPicker',
@@ -57,4 +59,16 @@ export function setComponentRuleType(rule, component, valueFormat) {
 
   else if (['InputNumber'].includes(component))
     rule.type = 'number'
+}
+
+export function handleInputNumberValue(component, val) {
+  if (!component)
+    return val
+
+  if (defaultValueComponents.includes(component)) {
+    if (component !== 'InputNumber')
+      return ((val || val === 0) && isNumber(val)) ? `${val}` : val
+  }
+
+  return val
 }
