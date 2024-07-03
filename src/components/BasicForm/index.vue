@@ -142,8 +142,16 @@ function setFormModel(key, value, schema) {
   }
 }
 
-function handleEnterPress() {
-  console.log('表单值', formModel)
+function handleEnterPress(e) {
+  // autoSubmitOnEnter: 在INPUT组件上单击回车时，是否自动提交
+  const { autoSubmitOnEnter } = unref(getProps)
+  if (!autoSubmitOnEnter)
+    return
+  if (e.key === 'Enter' && e.target && e.target instanceof HTMLElement) {
+    const target = e.target
+    if (target && target.tagName && target.tagName.toUpperCase() === 'INPUT')
+      handleSubmit()
+  }
 }
 
 const getFormActionBindProps = computed(() => ({ ...getProps.value, ...advanceState }))
@@ -151,7 +159,7 @@ const getFormActionBindProps = computed(() => ({ ...getProps.value, ...advanceSt
 const formActionType = {
   getFieldsValue: () => {},
   setFieldsValue: () => {},
-  resetFields: () => {},
+  resetFields,
   updateSchema: () => {},
   resetSchema: () => {},
   setProps: () => {},
@@ -160,7 +168,7 @@ const formActionType = {
   clearValidate: () => {},
   validateFields: () => {},
   validate: () => {},
-  submit: () => {},
+  submit: handleSubmit,
   scrollToField: () => {},
 }
 

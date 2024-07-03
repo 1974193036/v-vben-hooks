@@ -62,7 +62,7 @@ export const basicProps = {
   // 在INPUT组件上单击回车时，是否自动提交
   autoSubmitOnEnter: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   // 是否聚焦第一个输入框，只在第一个表单项为input的时候作用
   autoFocusFirstItem: {

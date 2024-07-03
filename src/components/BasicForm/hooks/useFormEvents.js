@@ -27,7 +27,6 @@ export function useFormEvents({
     if (!formEl)
       return
 
-    // console.log(formModel)
     Object.keys(formModel).forEach((key) => {
       const schema = unref(getSchema).find(item => item.field === key)
       formModel[key] = getDefaultValue(schema, defaultValueRef, key)

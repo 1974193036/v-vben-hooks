@@ -130,13 +130,22 @@ function beforeResetForm() {
 function handleReset() {
   console.log('reset')
 }
+let __resetFields
 function regiser(formActionType) {
   console.log(formActionType)
+  const { resetFields } = formActionType
+  __resetFields = resetFields
+}
+function resetForm() {
+  __resetFields()
 }
 </script>
 
 <template>
   <div style="margin: 50px 200px;">
+    <a-button @click="resetForm">
+      手动重置表单
+    </a-button>
     <BasicForm
       :label-width="120"
       :schemas="schemas"
