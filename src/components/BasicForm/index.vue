@@ -198,35 +198,35 @@ onMounted(() => {
 })
 
 // 测试的
-function test() {
-  // formModel.field4 = '男'
-  setFormModel('field4', '男', {})
+// function test() {
+// formModel.field4 = '男'
+// setFormModel('field4', '男', {})
 
-  // schemaRef.value = [
-  //   {
-  //     field: 'code1',
-  //     component: 'Input',
-  //     label: 'code1',
-  //     colProps: { span: 24 },
-  //   },
-  //   {
-  //     field: 'code2',
-  //     component: 'Input',
-  //     label: 'code2',
-  //     colProps: { span: 24 },
-  //   },
-  // ]
-  // defaultValueRef.value = {}
-  // setProps({
-  //   labelWidth: 200,
-  // })
-}
+// schemaRef.value = [
+//   {
+//     field: 'code1',
+//     component: 'Input',
+//     label: 'code1',
+//     colProps: { span: 24 },
+//   },
+//   {
+//     field: 'code2',
+//     component: 'Input',
+//     label: 'code2',
+//     colProps: { span: 24 },
+//   },
+// ]
+// defaultValueRef.value = {}
+// setProps({
+//   labelWidth: 200,
+// })
+// }
 </script>
 
 <template>
-  <a-button @click="test">
+  <!-- <a-button @click="test">
     test
-  </a-button>
+  </a-button> -->
   <a-form
     v-bind="getBindValue"
     ref="formElRef"
