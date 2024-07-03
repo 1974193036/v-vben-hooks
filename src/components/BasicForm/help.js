@@ -44,3 +44,17 @@ export const defaultValueComponents = [
   'InputSearch',
   'InputTextArea',
 ]
+
+export function setComponentRuleType(rule, component, valueFormat) {
+  if (Reflect.has(rule, 'type'))
+    return
+
+  if (['DatePicker', 'MonthPicker', 'WeekPicker', 'TimePicker'].includes(component))
+    rule.type = valueFormat ? 'string' : 'object'
+
+  else if (['RangePicker', 'DatePickerRange', 'Upload', 'CheckboxGroup', 'TimePicker'].includes(component))
+    rule.type = 'array'
+
+  else if (['InputNumber'].includes(component))
+    rule.type = 'number'
+}

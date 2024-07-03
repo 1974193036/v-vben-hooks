@@ -1,10 +1,10 @@
 <script lang="jsx">
 import { computed, defineComponent, toRefs, unref } from 'vue'
-import { isBoolean, isFunction, isString, upperFirst } from 'lodash-es'
+import { cloneDeep, isBoolean, isFunction, isString, upperFirst } from 'lodash-es'
 import { InfoCircleOutlined } from '@ant-design/icons-vue'
 import { componentMap } from '../componentMap'
 import { useItemLabelWidth } from '../hooks/useItemLabelWidth'
-import { createPlaceholderMessage, isComponentFormSchema } from '../help'
+import { createPlaceholderMessage, isComponentFormSchema, setComponentRuleType } from '../help'
 import { getSlot } from '@/utils/slot'
 
 export default defineComponent({
@@ -139,6 +139,59 @@ export default defineComponent({
       return { isShow, isIfShow }
     }
 
+    function handleRules() {
+      const {
+        rules: defRules = [],
+        component,
+        rulesMessageJoinLabel,
+        label,
+        dynamicRules,
+      } = props.schema
+
+      if (isFunction(dynamicRules))
+        return dynamicRules(unref(getValues))
+
+      const rules = cloneDeep(defRules)
+      const { rulesMessageJoinLabel: globalRulesMessageJoinLabel } = props.formProps
+
+      const joinLabel = Reflect.has(props.schema, 'rulesMessageJoinLabel')
+        ? rulesMessageJoinLabel
+        : globalRulesMessageJoinLabel
+      const assertLabel = joinLabel ? (isFunction(label) ? '' : label) : ''
+      const defaultMsg = component
+        ? createPlaceholderMessage(component) + assertLabel
+        : assertLabel
+
+      const requiredRuleIndex = rules.findIndex(
+        rule => Reflect.has(rule, 'required') && !Reflect.has(rule, 'validator'),
+      )
+      if (requiredRuleIndex !== -1) {
+        const rule = rules[requiredRuleIndex]
+        const { isShow } = getShow()
+        if (!isShow)
+          rule.required = false
+
+        if (component) {
+          rule.message = rule.message || defaultMsg
+
+          if (component.includes('Input') || component.includes('Textarea'))
+            rule.whitespace = true
+
+          const valueFormat = unref(getComponentsProps)?.valueFormat
+          setComponentRuleType(rule, component, valueFormat)
+        }
+      }
+      // Maximum input length rule check
+      const characterInx = rules.findIndex(val => val.max)
+      if (characterInx !== -1 && !rules[characterInx].validator) {
+        rules[characterInx].message
+            = rules[characterInx].message
+            || `字符数应小于${rules[characterInx].max}位`
+      }
+
+      return rules
+    }
+
     function renderLabelHelpMessage() {
       const { label, helpMessage } = props.schema
       const getLabel = isFunction(label) ? label(unref(getValues)) : label
@@ -177,6 +230,7 @@ export default defineComponent({
         return null
 
       const {
+        renderComponentContent,
         component,
         field,
         changeEvent = 'change',
@@ -222,7 +276,17 @@ export default defineComponent({
         ...bindValue,
       }
 
-      return <Comp {...compAttr} />
+      if (!renderComponentContent)
+        return <Comp {...compAttr} />
+
+      const compSlot = isFunction(renderComponentContent)
+        ? {
+            ...renderComponentContent(),
+          }
+        : {
+            default: () => renderComponentContent,
+          }
+      return <Comp {...compAttr}>{compSlot}</Comp>
     }
 
     function renderItem() {
@@ -252,6 +316,7 @@ export default defineComponent({
           class={{ 'suffix-item': showSuffix }}
           {...itemProps}
           label={renderLabelHelpMessage()}
+          rules={handleRules()}
           labelCol={labelCol}
           wrapperCol={wrapperCol}
         >

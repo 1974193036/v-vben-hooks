@@ -123,9 +123,11 @@ export const basicProps = {
       return date?.format?.('YYYY-MM-DD') ?? date
     },
   },
-
-  // rulesMessageJoinLabel: booleanType<boolean>(true),
-
+  // 如果表单项有校验，会自动生成校验信息，该参数控制是否将字段中文名字拼接到自动生成的信息后方
+  rulesMessageJoinLabel: {
+    type: Boolean,
+    default: true,
+  },
   // 是否显示操作按钮(重置/提交)
   showActionButtonGroup: {
     type: Boolean,

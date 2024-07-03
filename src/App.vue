@@ -39,6 +39,9 @@ const schemas = [
         suffix: () => 'sSlot',
       }
     },
+    dynamicRules: ({ values }) => {
+      return values.field2 ? [{ required: true, message: '字段1必填' }] : []
+    },
   },
   {
     field: 'field2',
@@ -54,6 +57,7 @@ const schemas = [
       },
     },
     suffix: '天',
+    rules: [{ required: true, trigger: 'blur' }],
   },
   {
     field: 'field3',
@@ -89,6 +93,7 @@ const schemas = [
         },
       ],
     },
+    rules: [{ required: true, trigger: 'change' }],
   },
   // {
   //   field: 'code1',
