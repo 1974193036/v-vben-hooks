@@ -1,5 +1,5 @@
 import { nextTick, toRaw, unref } from 'vue'
-import { cloneDeep, get, isFunction, isUndefined, set } from 'lodash-es'
+import { cloneDeep, get, isArray, isFunction, isNil, isObject, isString, isUndefined, set } from 'lodash-es'
 import { dateItemType, defaultValueComponents, handleInputNumberValue } from '../help'
 import { dateUtil } from '@/utils/dateUtil'
 
@@ -207,6 +207,91 @@ export function useFormEvents({
     return handleFormValues(values)
   }
 
+  /**
+   * behavior?: 'auto' | 'instant' | 'smooth'
+   * block?: 'start' | 'center' | 'end'
+   */
+  async function scrollToField(name, options) {
+    await unref(formElRef)?.scrollToField(name, options)
+  }
+
+  /**
+   * @description: 插入到指定 prefixField 后面，如果没传指定 prefixField，则插入到最后, 当 first = true 时插入到第一个位置
+   */
+  async function appendSchemaByField(
+    schema,
+    prefixField,
+    first = false,
+  ) {
+    const schemaList = cloneDeep(unref(getSchema))
+    const addSchemaIds = Array.isArray(schema)
+      ? schema.map(item => item.field)
+      : [schema.field]
+    if (schemaList.find(item => addSchemaIds.includes(item.field))) {
+      console.error('There are schemas that have already been added')
+      return
+    }
+    const index = schemaList.findIndex(schema => schema.field === prefixField)
+    const _schemaList = isObject(schema) ? [schema] : schema
+    if (!prefixField || index === -1 || first)
+      first ? schemaList.unshift(..._schemaList) : schemaList.push(..._schemaList)
+
+    else if (index !== -1)
+      schemaList.splice(index + 1, 0, ..._schemaList)
+
+    schemaRef.value = schemaList
+    _setDefaultValue(schema)
+  }
+
+  function _setDefaultValue(data) {
+    let schemas = []
+    if (isObject(data))
+      schemas.push(data)
+
+    if (isArray(data))
+      schemas = [...data]
+
+    const obj = {}
+    const currentFieldsValue = getFieldsValue()
+    schemas.forEach((item) => {
+      if (
+        item.component !== 'Divider'
+        && Reflect.has(item, 'field')
+        && item.field
+        && !isNil(item.defaultValue)
+        && (!(item.field in currentFieldsValue) || isNil(currentFieldsValue[item.field]))
+      )
+        obj[item.field] = item.defaultValue
+    })
+    setFieldsValue(obj)
+  }
+
+  /**
+   * @description: 根据 field 删除 Schema
+   */
+  async function removeSchemaByField(fields) {
+    const schemaList = cloneDeep(unref(getSchema))
+    if (!fields)
+      return
+
+    const fieldList = isString(fields) ? [fields] : fields
+
+    for (const field of fieldList)
+      _removeSchemaByFeild(field, schemaList)
+
+    schemaRef.value = schemaList
+  }
+
+  function _removeSchemaByFeild(field, schemaList) {
+    if (isString(field)) {
+      const index = schemaList.findIndex(schema => schema.field === field)
+      if (index !== -1) {
+        delete formModel[field]
+        schemaList.splice(index, 1)
+      }
+    }
+  }
+
   const formActionType = {
     resetFields,
     submit: handleSubmit,
@@ -215,6 +300,9 @@ export function useFormEvents({
     validateFields,
     getFieldsValue,
     setFieldsValue,
+    scrollToField,
+    appendSchemaByField,
+    removeSchemaByField,
   }
 
   return {
@@ -225,6 +313,9 @@ export function useFormEvents({
     validateFields,
     getFieldsValue,
     setFieldsValue,
+    scrollToField,
+    appendSchemaByField,
+    removeSchemaByField,
   }
 }
 

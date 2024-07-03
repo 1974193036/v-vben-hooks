@@ -130,14 +130,16 @@ function beforeResetForm() {
 function handleReset() {
   console.log('reset')
 }
-let __resetFields, __getFieldsValue, __setFieldsValue, __setProps
+let __resetFields, __getFieldsValue, __setFieldsValue, __setProps, __appendSchemaByField, __removeSchemaByField
 function regiser(formActionType) {
   console.log(formActionType)
-  const { resetFields, getFieldsValue, setFieldsValue, setProps } = formActionType
+  const { resetFields, getFieldsValue, setFieldsValue, setProps, appendSchemaByField, removeSchemaByField } = formActionType
   __resetFields = resetFields
   __getFieldsValue = getFieldsValue
   __setFieldsValue = setFieldsValue
   __setProps = setProps
+  __appendSchemaByField = appendSchemaByField
+  __removeSchemaByField = removeSchemaByField
 }
 function resetForm() {
   __resetFields()
@@ -165,6 +167,24 @@ function setFormValues() {
     </a-button>
     <a-button @click="__setProps({ labelWidth: 250 })">
       更改labelWidth
+    </a-button>
+    <a-button
+      @click="__appendSchemaByField({
+        field: 'field5',
+        component: 'Input',
+        label: '字段5',
+        defaultValue: '111',
+        colProps: {
+          span: 8,
+        },
+      })"
+    >
+      增加schema
+    </a-button>
+    <a-button
+      @click="__removeSchemaByField('field5')"
+    >
+      删除schema
     </a-button>
     <BasicForm
       :label-width="120"

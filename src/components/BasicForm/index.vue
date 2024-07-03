@@ -126,6 +126,9 @@ const {
   validateFields,
   getFieldsValue,
   setFieldsValue,
+  scrollToField,
+  appendSchemaByField,
+  removeSchemaByField,
 } = useFormEvents({
   emit,
   getProps,
@@ -170,11 +173,11 @@ const formActionType = {
   getFieldsValue,
   setFieldsValue,
   setProps,
+  scrollToField,
+  appendSchemaByField,
+  removeSchemaByField,
   // updateSchema: () => {},
   // resetSchema: () => {},
-  // removeSchemaByField: () => {},
-  // appendSchemaByField: () => {},
-  // scrollToField: () => {},
 }
 
 createFormContext({
