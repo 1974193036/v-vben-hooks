@@ -2,6 +2,8 @@
 import { computed, ref, toRaw, unref, useAttrs } from 'vue'
 import { omit } from 'lodash-es'
 import { basicProps } from './props'
+import { useLoading } from './hooks/useLoading'
+import { useRowSelection } from './hooks/useRowSelection'
 
 const props = defineProps(basicProps)
 const emit = defineEmits([
@@ -18,6 +20,7 @@ const attrs = useAttrs()
 const wrapRef = ref(null)
 const tableElRef = ref(null)
 const innerPropsRef = ref()
+const tableData = ref([])
 
 const getProps = computed(() => {
   return { ...props, ...unref(innerPropsRef) }
@@ -27,13 +30,25 @@ function setProps(props) {
   innerPropsRef.value = { ...unref(innerPropsRef), ...props }
 }
 
+const { getLoading, setLoading } = useLoading(getProps)
+
+const {
+  getRowSelectionRef,
+  getSelectRows,
+  getSelectRowKeys,
+  setSelectedRowKeys,
+  setSelectedRows,
+  clearSelectedRowKeys,
+  deleteSelectRowByKey,
+} = useRowSelection(getProps, tableData, emit)
+
 const getRowClassName = (_record, index) => (index % 2 === 1 ? 'v-basic-table-row__striped' : null)
 const maxTableWidth = 500
 
 const getDataSourceRef = computed(() => props.dataSource)
 const getHeaderProps = ref({})
-const getLoading = computed(() => props.loading)
-const getRowSelectionRef = ref(null)
+// const getLoading = computed(() => props.loading)
+// const getRowSelectionRef = ref(null)
 const getRowKey = ref('id')
 const getViewColumns = computed(() => props.columns)
 const getPaginationInfo = computed(() => ({
@@ -81,6 +96,18 @@ const getWrapperClass = computed(() => {
     },
   ]
 })
+
+const tableAction = {
+  setLoading,
+  getSelectRows,
+  getSelectRowKeys,
+  setSelectedRowKeys,
+  setSelectedRows,
+  clearSelectedRowKeys,
+  deleteSelectRowByKey,
+}
+
+emit('register', tableAction)
 
 // 分页、排序、筛选变化时触发
 function handleTableChange(pagination, filters, sorter, extra) {

@@ -27,11 +27,15 @@ function toggleStriped() {
   striped.value = !striped.value
 }
 
-let __setLoading
+let __setLoading, __getSelectRows, __getSelectRowKeys, __setSelectedRowKeys, __clearSelectedRowKeys
 function register(tableAction) {
   // console.log('tableAction', tableAction)
-  const { setLoading } = tableAction
+  const { setLoading, getSelectRows, getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys } = tableAction
   __setLoading = setLoading
+  __getSelectRows = getSelectRows
+  __getSelectRowKeys = getSelectRowKeys
+  __setSelectedRowKeys = setSelectedRowKeys
+  __clearSelectedRowKeys = clearSelectedRowKeys
 }
 </script>
 
@@ -51,6 +55,18 @@ function register(tableAction) {
       <a-button type="primary" @click="() => __setLoading(true)">
         手动开启loading
       </a-button>
+      <a-button type="primary" @click="() => console.log(__getSelectRowKeys())">
+        手动获取选中行的keys
+      </a-button>
+      <a-button type="primary" @click="() => console.log(__getSelectRows())">
+        手动获取选中行的数据
+      </a-button>
+      <a-button type="primary" @click="() => __setSelectedRowKeys(['1', '2'])">
+        手动设置选中行的keys
+      </a-button>
+      <a-button type="primary" @click="() => __clearSelectedRowKeys()">
+        手动清空选中行
+      </a-button>
     </a-space>
     <BasicTable
       title="基础示例"
@@ -61,6 +77,10 @@ function register(tableAction) {
       :loading="loading"
       :striped="striped"
       :pagination="pagination"
+      :row-selection="{
+        type: 'checkbox',
+      }"
+      row-key="id"
       show-table-setting
       @register="register"
     >
