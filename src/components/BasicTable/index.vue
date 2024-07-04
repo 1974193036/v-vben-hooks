@@ -8,6 +8,7 @@ import { usePagination } from './hooks/usePagination'
 import { useDataSource } from './hooks/useDataSource'
 import { useColumns } from './hooks/useColumns'
 import { useTableStyle } from './hooks/useTableStyle'
+import { useCustomRow } from './hooks/useCustomRow'
 
 const props = defineProps(basicProps)
 const emit = defineEmits([
@@ -74,6 +75,7 @@ const {
   fetch,
   updateTableData,
   getRowKey,
+  getAutoCreateKey,
 } = useDataSource(
   getProps,
   {
@@ -81,12 +83,20 @@ const {
     getPaginationInfo,
     setLoading,
     setPagination,
-    // 绑定表单的查询数据
+    // TODO: 绑定表单的查询数据
     // getFieldsValue: formActions.getFieldsValue,
     clearSelectedRowKeys,
   },
   emit,
 )
+
+const { customRow } = useCustomRow(getProps, {
+  setSelectedRowKeys,
+  getSelectRowKeys,
+  clearSelectedRowKeys,
+  getAutoCreateKey,
+  emit,
+})
 
 const prefixCls = 'v-basic-table'
 const { getRowClassName } = useTableStyle(getProps, prefixCls)
@@ -111,7 +121,8 @@ const getHeaderProps = ref({})
 const getBindValues = computed(() => {
   let propsData = {
     ...attrs,
-    customRow: (_record, _index) => {},
+    // customRow: (_record, _index) => {},
+    customRow,
     ...unref(getProps),
     ...unref(getHeaderProps),
     title: () => '基础示例',
