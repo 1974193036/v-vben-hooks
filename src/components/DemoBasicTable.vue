@@ -10,8 +10,6 @@ const pagination = ref(false)
 
 const columns = getBasicColumns()
 const data = getBasicData()
-console.log(columns)
-console.log(data)
 
 function toggleBorder() {
   border.value = !border.value
@@ -32,6 +30,17 @@ function toggleStriped() {
 
 <template>
   <div style="margin: 50px 200px;">
+    <a-space>
+      <a-button type="primary" @click="toggleBorder">
+        {{ !border ? '显示边框' : '隐藏边框' }}
+      </a-button>
+      <a-button type="primary" @click="toggleLoading">
+        开启loading
+      </a-button>
+      <a-button type="primary" @click="toggleStriped">
+        {{ !striped ? '显示斑马纹' : '隐藏斑马纹' }}
+      </a-button>
+    </a-space>
     <BasicTable
       title="基础示例"
       title-help-message="温馨提醒"
