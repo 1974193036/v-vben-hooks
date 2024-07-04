@@ -6,6 +6,7 @@ import { useLoading } from './hooks/useLoading'
 import { useRowSelection } from './hooks/useRowSelection'
 import { usePagination } from './hooks/usePagination'
 import { useDataSource } from './hooks/useDataSource'
+import { useColumns } from './hooks/useColumns'
 
 const props = defineProps(basicProps)
 const emit = defineEmits([
@@ -55,6 +56,14 @@ const {
 } = usePagination(getProps, fetchData)
 
 const {
+  getViewColumns,
+  setColumnWidth, // 拖动列时触发
+  maxTableWidth,
+  getColumns,
+  setColumns,
+} = useColumns(getProps, getPaginationInfo)
+
+const {
   handleTableChange: onTableChange,
   getDataSourceRef,
   getDataSource,
@@ -63,10 +72,6 @@ const {
   reload,
   fetch,
   updateTableData,
-  // updateTableDataRecord,
-  // deleteTableDataRecord,
-  // insertTableDataRecord,
-  // findTableDataRecord,
   getRowKey,
 } = useDataSource(
   getProps,
@@ -83,14 +88,14 @@ const {
 )
 
 const getRowClassName = (_record, index) => (index % 2 === 1 ? 'v-basic-table-row__striped' : null)
-const maxTableWidth = 500
+// const maxTableWidth = 500
 
 // const getDataSourceRef = computed(() => props.dataSource)
 const getHeaderProps = ref({})
 // const getLoading = computed(() => props.loading)
 // const getRowSelectionRef = ref(null)
 // const getRowKey = ref('id')
-const getViewColumns = computed(() => unref(getProps).columns)
+// const getViewColumns = computed(() => unref(getProps).columns)
 // const getPaginationInfo = computed(() => ({
 //   showSizeChanger: true,
 //   size: 'large',
@@ -153,6 +158,8 @@ const tableAction = {
   setTableData,
   reload,
   updateTableData,
+  getColumns,
+  setColumns,
 }
 
 emit('register', tableAction)
@@ -165,10 +172,6 @@ function handleTableChange(pagination, filters, sorter, extra) {
   // 解决通过useTable注册onChange时不起作用的问题
   const { onChange } = unref(getProps)
   onChange && isFunction(onChange) && onChange(pagination, filters, sorter, extra)
-}
-// 拖动列时触发
-function setColumnWidth(width, column) {
-  console.log(width, column)
 }
 </script>
 

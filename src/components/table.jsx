@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import { Tag } from 'ant-design-vue'
 
 const statusMap = {
@@ -35,7 +36,7 @@ export function getBasicColumns() {
       // format: statusMap // 根据映射表，直接展示文字
       format: (text) => {
         return h(Tag, {
-          color: text === '2' ? 'success' : text === '0' ? 'error' : 'default',
+          color: text === 2 ? 'success' : text === 0 ? 'error' : 'default',
         }, {
           default: () => statusMap[text],
         })
@@ -81,7 +82,7 @@ export function getBasicData() {
         status: Math.floor(Math.random() * 4),
         no: `${index + 10}`,
         address: 'New York No. 1 Lake ParkNew York No. 1 Lake Park',
-        updatedAt: new Date(),
+        updatedAt: new Date().getTime() + index * 60 * 1000,
       })
     }
     return arr

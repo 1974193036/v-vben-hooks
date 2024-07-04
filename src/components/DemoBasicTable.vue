@@ -11,13 +11,15 @@ const pagination = ref(true)
 const columns = getBasicColumns()
 const data = getBasicData()
 
-function getList() {
+function getList(params) {
+  const { page, pageSize } = params
+  const start = (page - 1) * pageSize
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
         code: 1,
         msg: '成功',
-        responseEntity: data,
+        responseEntity: data.slice(start, start + pageSize),
         count: data.length,
       })
     }, 400)
@@ -40,10 +42,10 @@ function toggleStriped() {
   striped.value = !striped.value
 }
 
-let __setLoading, __getSelectRows, __getSelectRowKeys, __setSelectedRowKeys, __clearSelectedRowKeys, __setPagination, __getDataSource, __reload, __setProps
+let __setLoading, __getSelectRows, __getSelectRowKeys, __setSelectedRowKeys, __clearSelectedRowKeys, __setPagination, __getDataSource, __reload, __setProps, __getColumns, __setColumns
 function register(tableAction) {
   // console.log('tableAction', tableAction)
-  const { setLoading, getSelectRows, getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, setPagination, getDataSource, reload, setProps } = tableAction
+  const { setLoading, getSelectRows, getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, setPagination, getDataSource, reload, setProps, getColumns, setColumns } = tableAction
   __setLoading = setLoading
   __getSelectRows = getSelectRows
   __getSelectRowKeys = getSelectRowKeys
@@ -53,6 +55,8 @@ function register(tableAction) {
   __getDataSource = getDataSource
   __reload = reload
   __setProps = setProps
+  __getColumns = getColumns
+  __setColumns = setColumns
 }
 
 function setProps() {
@@ -114,6 +118,12 @@ function setProps() {
         </a-button>
         <a-button type="primary" @click="() => __reload({ page: 1 })">
           手动刷新列表数据
+        </a-button>
+        <a-button type="primary" @click="() => console.log(__getColumns())">
+          手动获取列表项
+        </a-button>
+        <a-button type="primary" @click="() => __setColumns(getBasicShortColumns())">
+          手动设置列表项
         </a-button>
       </a-space>
     </div>
