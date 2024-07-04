@@ -4,6 +4,7 @@ import { omit } from 'lodash-es'
 import { basicProps } from './props'
 import { useLoading } from './hooks/useLoading'
 import { useRowSelection } from './hooks/useRowSelection'
+import { usePagination } from './hooks/usePagination'
 
 const props = defineProps(basicProps)
 const emit = defineEmits([
@@ -42,6 +43,21 @@ const {
   deleteSelectRowByKey,
 } = useRowSelection(getProps, tableData, emit)
 
+function fetchData() {
+  return async () => {
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([{ id: '1' }, { id: '2' }])
+      }, 1000)
+    })
+  }
+}
+const {
+  getPaginationInfo,
+  getPagination,
+  setPagination,
+} = usePagination(getProps, fetchData)
+
 const getRowClassName = (_record, index) => (index % 2 === 1 ? 'v-basic-table-row__striped' : null)
 const maxTableWidth = 500
 
@@ -51,13 +67,13 @@ const getHeaderProps = ref({})
 // const getRowSelectionRef = ref(null)
 const getRowKey = ref('id')
 const getViewColumns = computed(() => props.columns)
-const getPaginationInfo = computed(() => ({
-  showSizeChanger: true,
-  size: 'large',
-  position: ['bottomRight'],
-  pageSize: 10,
-  ...props.pagination,
-}))
+// const getPaginationInfo = computed(() => ({
+//   showSizeChanger: true,
+//   size: 'large',
+//   position: ['bottomRight'],
+//   pageSize: 10,
+//   ...props.pagination,
+// }))
 
 const getBindValues = computed(() => {
   let propsData = {
@@ -105,6 +121,8 @@ const tableAction = {
   setSelectedRows,
   clearSelectedRowKeys,
   deleteSelectRowByKey,
+  setPagination,
+  getPagination,
 }
 
 emit('register', tableAction)
