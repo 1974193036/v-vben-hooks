@@ -1,10 +1,11 @@
 <script setup>
 import { computed, ref, toRaw, unref, useAttrs } from 'vue'
-import { omit } from 'lodash-es'
+import { isFunction, omit } from 'lodash-es'
 import { basicProps } from './props'
 import { useLoading } from './hooks/useLoading'
 import { useRowSelection } from './hooks/useRowSelection'
 import { usePagination } from './hooks/usePagination'
+import { useDataSource } from './hooks/useDataSource'
 
 const props = defineProps(basicProps)
 const emit = defineEmits([
@@ -44,13 +45,8 @@ const {
 } = useRowSelection(getProps, tableData, emit)
 
 function fetchData() {
-  return async () => {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([{ id: '1' }, { id: '2' }])
-      }, 1000)
-    })
-  }
+  // eslint-disable-next-line no-use-before-define
+  return fetch()
 }
 const {
   getPaginationInfo,
@@ -58,15 +54,43 @@ const {
   setPagination,
 } = usePagination(getProps, fetchData)
 
+const {
+  handleTableChange: onTableChange,
+  getDataSourceRef,
+  getDataSource,
+  getRawDataSource,
+  setTableData,
+  reload,
+  fetch,
+  updateTableData,
+  // updateTableDataRecord,
+  // deleteTableDataRecord,
+  // insertTableDataRecord,
+  // findTableDataRecord,
+  getRowKey,
+} = useDataSource(
+  getProps,
+  {
+    tableData, // 钩子内进行请求获取到列表数据时，把值同步给 tableData = 列表数据
+    getPaginationInfo,
+    setLoading,
+    setPagination,
+    // 绑定表单的查询数据
+    // getFieldsValue: formActions.getFieldsValue,
+    clearSelectedRowKeys,
+  },
+  emit,
+)
+
 const getRowClassName = (_record, index) => (index % 2 === 1 ? 'v-basic-table-row__striped' : null)
 const maxTableWidth = 500
 
-const getDataSourceRef = computed(() => props.dataSource)
+// const getDataSourceRef = computed(() => props.dataSource)
 const getHeaderProps = ref({})
 // const getLoading = computed(() => props.loading)
 // const getRowSelectionRef = ref(null)
-const getRowKey = ref('id')
-const getViewColumns = computed(() => props.columns)
+// const getRowKey = ref('id')
+const getViewColumns = computed(() => unref(getProps).columns)
 // const getPaginationInfo = computed(() => ({
 //   showSizeChanger: true,
 //   size: 'large',
@@ -114,6 +138,7 @@ const getWrapperClass = computed(() => {
 })
 
 const tableAction = {
+  setProps,
   setLoading,
   getSelectRows,
   getSelectRowKeys,
@@ -123,13 +148,23 @@ const tableAction = {
   deleteSelectRowByKey,
   setPagination,
   getPagination,
+  getDataSource,
+  getRawDataSource,
+  setTableData,
+  reload,
+  updateTableData,
 }
 
 emit('register', tableAction)
 
 // 分页、排序、筛选变化时触发
 function handleTableChange(pagination, filters, sorter, extra) {
-  console.log(pagination, filters, sorter, extra)
+  // console.log(pagination, filters, sorter, extra)
+  onTableChange()
+  emit('change', pagination, filters, sorter)
+  // 解决通过useTable注册onChange时不起作用的问题
+  const { onChange } = unref(getProps)
+  onChange && isFunction(onChange) && onChange(pagination, filters, sorter, extra)
 }
 // 拖动列时触发
 function setColumnWidth(width, column) {

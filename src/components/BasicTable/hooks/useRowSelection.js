@@ -56,6 +56,8 @@ export function useRowSelection(getProps, tableData, emit) {
 
   // 根据keys设置选中行
   function setSelectedRowKeys(rowKeys) {
+    // tableData: 列表数据加载完成时，同步给tableData一份值
+    // console.log(toRaw(unref(tableData)))
     selectedRowKeysRef.value = rowKeys || []
     const allSelectedRows = findNodeAll(
       toRaw(unref(tableData)).concat(toRaw(unref(selectedRowRef))),

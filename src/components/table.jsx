@@ -51,6 +51,24 @@ export function getBasicColumns() {
   ]
 }
 
+export function getBasicShortColumns() {
+  return [
+    {
+      title: '规则名称',
+      dataIndex: 'name',
+      fixed: 'left',
+      width: 100,
+      helpMessage: ['这是ID', '这是ID2', '这是ID3'],
+    },
+    {
+      title: '描述',
+      dataIndex: 'desc',
+      width: 280,
+      helpMessage: <div style="color: red">这个是jsx渲染出来的描述</div>,
+    },
+  ]
+}
+
 export function getBasicData() {
   return (() => {
     const arr= []
