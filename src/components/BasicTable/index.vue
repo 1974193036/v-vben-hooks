@@ -7,6 +7,7 @@ import { useRowSelection } from './hooks/useRowSelection'
 import { usePagination } from './hooks/usePagination'
 import { useDataSource } from './hooks/useDataSource'
 import { useColumns } from './hooks/useColumns'
+import { useTableStyle } from './hooks/useTableStyle'
 
 const props = defineProps(basicProps)
 const emit = defineEmits([
@@ -87,7 +88,10 @@ const {
   emit,
 )
 
-const getRowClassName = (_record, index) => (index % 2 === 1 ? 'v-basic-table-row__striped' : null)
+const prefixCls = 'v-basic-table'
+const { getRowClassName } = useTableStyle(getProps, prefixCls)
+
+// const getRowClassName = (_record, index) => (index % 2 === 1 ? 'v-basic-table-row__striped' : null)
 // const maxTableWidth = 500
 
 // const getDataSourceRef = computed(() => props.dataSource)
@@ -129,7 +133,6 @@ const getBindValues = computed(() => {
   return propsData
 })
 
-const prefixCls = 'v-basic-table'
 const getWrapperClass = computed(() => {
   const values = unref(getBindValues)
   return [

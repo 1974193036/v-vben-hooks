@@ -38,6 +38,9 @@ export const basicProps = {
     type: Boolean,
     default: false,
   },
+  rowClassName: {
+    type: Function,
+  },
   // 请求接口
   api: {
     type: Function,
