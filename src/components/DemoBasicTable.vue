@@ -26,6 +26,13 @@ function toggleLoading() {
 function toggleStriped() {
   striped.value = !striped.value
 }
+
+let __setLoading
+function register(tableAction) {
+  // console.log('tableAction', tableAction)
+  const { setLoading } = tableAction
+  __setLoading = setLoading
+}
 </script>
 
 <template>
@@ -40,6 +47,10 @@ function toggleStriped() {
       <a-button type="primary" @click="toggleStriped">
         {{ !striped ? '显示斑马纹' : '隐藏斑马纹' }}
       </a-button>
+
+      <a-button type="primary" @click="() => __setLoading(true)">
+        手动开启loading
+      </a-button>
     </a-space>
     <BasicTable
       title="基础示例"
@@ -51,6 +62,7 @@ function toggleStriped() {
       :striped="striped"
       :pagination="pagination"
       show-table-setting
+      @register="register"
     >
       <template #toolbar>
         <a-space>
