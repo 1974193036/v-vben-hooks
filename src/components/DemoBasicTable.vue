@@ -145,6 +145,14 @@ function setProps() {
           </a-space>
         </div>
       </template>
+
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'callNo'">
+          <a>
+            {{ record.callNo }}
+          </a>
+        </template>
+      </template>
     </BasicTable>
   </div>
 </template>

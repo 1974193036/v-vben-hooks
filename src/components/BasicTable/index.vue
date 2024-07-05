@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toRaw, unref, useAttrs } from 'vue'
+import { computed, ref, toRaw, unref, useAttrs, useSlots } from 'vue'
 import { isFunction, omit } from 'lodash-es'
 import { basicProps } from './props'
 import { useLoading } from './hooks/useLoading'
@@ -10,6 +10,7 @@ import { useColumns } from './hooks/useColumns'
 import { useTableStyle } from './hooks/useTableStyle'
 import { useCustomRow } from './hooks/useCustomRow'
 import HeaderCell from './components/HeaderCell.vue'
+import { useTableHeader } from './hooks/useTableHeader'
 
 defineOptions({ name: 'BasicTable' })
 
@@ -22,9 +23,11 @@ const emit = defineEmits([
   'row-click',
   'row-dbClick',
   'change',
+  'columns-change',
 ])
 
 const attrs = useAttrs()
+const slots = useSlots()
 const wrapRef = ref(null)
 const tableElRef = ref(null)
 const innerPropsRef = ref()
@@ -107,8 +110,10 @@ const { getRowClassName } = useTableStyle(getProps, prefixCls)
 // const getRowClassName = (_record, index) => (index % 2 === 1 ? 'v-basic-table-row__striped' : null)
 // const maxTableWidth = 500
 
+const { getHeaderProps } = useTableHeader(getProps, slots)
+
 // const getDataSourceRef = computed(() => props.dataSource)
-const getHeaderProps = ref({})
+// const getHeaderProps = ref({})
 // const getLoading = computed(() => props.loading)
 // const getRowSelectionRef = ref(null)
 // const getRowKey = ref('id')
@@ -128,7 +133,6 @@ const getBindValues = computed(() => {
     customRow,
     ...unref(getProps),
     ...unref(getHeaderProps),
-    title: () => '基础示例',
     loading: unref(getLoading),
     tableLayout: 'fixed',
     rowSelection: unref(getRowSelectionRef)
@@ -202,10 +206,22 @@ function handleTableChange(pagination, filters, sorter, extra) {
       @change="handleTableChange"
       @resize-column="setColumnWidth"
     >
+      <template v-for="item in Object.keys($slots)" #[item]="data" :key="item">
+        <slot :name="item" v-bind="data || {}" />
+      </template>
+      <!-- 相当于
+      <template #toolbar="data">
+        <slot name="toolbar" v-bind="data || {}" />
+      </template> -->
+
       <template #headerCell="{ column }">
         <slot name="headerCell" v-bind="{ column }">
           <HeaderCell :column="column" />
         </slot>
+      </template>
+
+      <template #bodyCell="data">
+        <slot name="bodyCell" v-bind="data || {}" />
       </template>
     </a-table>
   </div>
