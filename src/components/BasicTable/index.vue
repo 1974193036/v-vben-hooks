@@ -9,6 +9,9 @@ import { useDataSource } from './hooks/useDataSource'
 import { useColumns } from './hooks/useColumns'
 import { useTableStyle } from './hooks/useTableStyle'
 import { useCustomRow } from './hooks/useCustomRow'
+import HeaderCell from './components/HeaderCell.vue'
+
+defineOptions({ name: 'BasicTable' })
 
 const props = defineProps(basicProps)
 const emit = defineEmits([
@@ -198,7 +201,13 @@ function handleTableChange(pagination, filters, sorter, extra) {
       :scroll="{ x: maxTableWidth }"
       @change="handleTableChange"
       @resize-column="setColumnWidth"
-    />
+    >
+      <template #headerCell="{ column }">
+        <slot name="headerCell" v-bind="{ column }">
+          <HeaderCell :column="column" />
+        </slot>
+      </template>
+    </a-table>
   </div>
 </template>
 

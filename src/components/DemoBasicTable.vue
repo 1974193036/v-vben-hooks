@@ -69,64 +69,6 @@ function setProps() {
 
 <template>
   <div style="margin: 50px 200px;">
-    <div>
-      <a-space style="margin:5px 0">
-        <a-button type="primary" @click="toggleBorder">
-          {{ !border ? '显示边框' : '隐藏边框' }}
-        </a-button>
-        <a-button type="primary" @click="toggleLoading">
-          开启loading
-        </a-button>
-        <a-button type="primary" @click="toggleStriped">
-          {{ !striped ? '显示斑马纹' : '隐藏斑马纹' }}
-        </a-button>
-        <a-button type="primary" @click="setProps">
-          手动更改属性
-        </a-button>
-      </a-space>
-    </div>
-    <div>
-      <a-space style="margin:5px 0">
-        <a-button type="primary" @click="() => __setLoading(true)">
-          手动开启loading
-        </a-button>
-        <a-button type="primary" @click="() => console.log(__getSelectRowKeys())">
-          手动获取选中行的keys
-        </a-button>
-        <a-button type="primary" @click="() => console.log(__getSelectRows())">
-          手动获取选中行的数据
-        </a-button>
-        <a-button type="primary" @click="() => __setSelectedRowKeys(['1', '2'])">
-          手动设置选中行的keys
-        </a-button>
-        <a-button type="primary" @click="() => __clearSelectedRowKeys()">
-          手动清空选中行
-        </a-button>
-      </a-space>
-    </div>
-    <div>
-      <a-space style="margin:5px 0">
-        <a-button type="primary" @click="() => __setPagination({ current: 1 })">
-          手动设置分页信息-回到第一页
-        </a-button>
-      </a-space>
-    </div>
-    <div>
-      <a-space style="margin:5px 0">
-        <a-button type="primary" @click="() => console.log(__getDataSource())">
-          手动获取列表数据
-        </a-button>
-        <a-button type="primary" @click="() => __reload({ page: 1 })">
-          手动刷新列表数据
-        </a-button>
-        <a-button type="primary" @click="() => console.log(__getColumns())">
-          手动获取列表项
-        </a-button>
-        <a-button type="primary" @click="() => __setColumns(getBasicShortColumns())">
-          手动设置列表项
-        </a-button>
-      </a-space>
-    </div>
     <BasicTable
       title="基础示例"
       title-help-message="温馨提醒"
@@ -144,17 +86,64 @@ function setProps() {
       @register="register"
     >
       <template #toolbar>
-        <a-space>
-          <a-button type="primary" @click="toggleBorder">
-            {{ !border ? '显示边框' : '隐藏边框' }}
-          </a-button>
-          <a-button type="primary" @click="toggleLoading">
-            开启loading
-          </a-button>
-          <a-button type="primary" @click="toggleStriped">
-            {{ !striped ? '显示斑马纹' : '隐藏斑马纹' }}
-          </a-button>
-        </a-space>
+        <div>
+          <a-space style="margin:5px 0">
+            <a-button type="primary" @click="toggleBorder">
+              {{ !border ? '显示边框' : '隐藏边框' }}
+            </a-button>
+            <a-button type="primary" @click="toggleLoading">
+              开启loading
+            </a-button>
+            <a-button type="primary" @click="toggleStriped">
+              {{ !striped ? '显示斑马纹' : '隐藏斑马纹' }}
+            </a-button>
+            <a-button type="primary" @click="setProps">
+              手动更改属性
+            </a-button>
+          </a-space>
+        </div>
+        <div>
+          <a-space style="margin:5px 0">
+            <a-button type="primary" @click="() => __setLoading(true)">
+              手动开启loading
+            </a-button>
+            <a-button type="primary" @click="() => console.log(__getSelectRowKeys())">
+              手动获取选中行的keys
+            </a-button>
+            <a-button type="primary" @click="() => console.log(__getSelectRows())">
+              手动获取选中行的数据
+            </a-button>
+            <a-button type="primary" @click="() => __setSelectedRowKeys(['1', '2'])">
+              手动设置选中行的keys
+            </a-button>
+            <a-button type="primary" @click="() => __clearSelectedRowKeys()">
+              手动清空选中行
+            </a-button>
+          </a-space>
+        </div>
+        <div>
+          <a-space style="margin:5px 0">
+            <a-button type="primary" @click="() => __setPagination({ current: 1 })">
+              手动设置分页信息-回到第一页
+            </a-button>
+          </a-space>
+        </div>
+        <div>
+          <a-space style="margin:5px 0">
+            <a-button type="primary" @click="() => console.log(__getDataSource())">
+              手动获取列表数据
+            </a-button>
+            <a-button type="primary" @click="() => __reload({ page: 1 })">
+              手动刷新列表数据
+            </a-button>
+            <a-button type="primary" @click="() => console.log(__getColumns())">
+              手动获取列表项
+            </a-button>
+            <a-button type="primary" @click="() => __setColumns(getBasicShortColumns())">
+              手动设置列表项
+            </a-button>
+          </a-space>
+        </div>
       </template>
     </BasicTable>
   </div>
