@@ -1,12 +1,14 @@
 <script setup>
 // import DemoBasicForm from '@/components/DemoBasicForm.vue'
 // import DemoUseForm from '@/components/DemoUseForm.vue'
-import DemoBasicTable from '@/components/DemoBasicTable.vue'
+// import DemoBasicTable from '@/components/DemoBasicTable.vue'
+import DemoUseTable from '@/components/DemoUseTable.vue'
 </script>
 
 <template>
   <!-- <DemoBasicForm />
   <a-divider />
   <DemoUseForm /> -->
-  <DemoBasicTable />
+  <!-- <DemoBasicTable /> -->
+  <DemoUseTable />
 </template>

@@ -191,7 +191,7 @@ const tableAction = {
   setColumns,
 }
 
-emit('register', tableAction)
+emit('register', tableAction, formActions)
 
 // 分页、排序、筛选变化时触发
 function handleTableChange(pagination, filters, sorter, extra) {
