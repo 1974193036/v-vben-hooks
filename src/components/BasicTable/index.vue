@@ -11,6 +11,8 @@ import { useTableStyle } from './hooks/useTableStyle'
 import { useCustomRow } from './hooks/useCustomRow'
 import HeaderCell from './components/HeaderCell.vue'
 import { useTableHeader } from './hooks/useTableHeader'
+import { useTableForm } from './hooks/useTableForm'
+import { BasicForm, useForm } from '@/components/BasicForm'
 
 defineOptions({ name: 'BasicTable' })
 
@@ -30,6 +32,7 @@ const attrs = useAttrs()
 const slots = useSlots()
 const wrapRef = ref(null)
 const tableElRef = ref(null)
+const formRef = ref(null)
 const innerPropsRef = ref()
 const tableData = ref([])
 
@@ -71,6 +74,8 @@ const {
   setColumns,
 } = useColumns(getProps, getPaginationInfo)
 
+const [registerForm, formActions] = useForm()
+
 const {
   handleTableChange: onTableChange,
   getDataSourceRef,
@@ -89,8 +94,8 @@ const {
     getPaginationInfo,
     setLoading,
     setPagination,
-    // TODO: 绑定表单的查询数据
-    // getFieldsValue: formActions.getFieldsValue,
+    // 绑定表单的查询数据
+    getFieldsValue: formActions.getFieldsValue,
     clearSelectedRowKeys,
   },
   emit,
@@ -125,6 +130,9 @@ const { getHeaderProps } = useTableHeader(getProps, slots)
 //   pageSize: 10,
 //   ...props.pagination,
 // }))
+
+const { getFormProps, replaceFormSlotKey, getFormSlotKeys, handleSearchInfoChange }
+    = useTableForm(getProps, slots, fetch, getLoading)
 
 const getBindValues = computed(() => {
   let propsData = {
@@ -198,6 +206,21 @@ function handleTableChange(pagination, filters, sorter, extra) {
 
 <template>
   <div ref="wrapRef" :class="getWrapperClass">
+    <BasicForm
+      v-if="getBindValues.useSearchForm"
+      ref="formRef"
+      v-bind="getFormProps"
+      @register="registerForm"
+      @submit="handleSearchInfoChange"
+    >
+      <template v-for="item in getFormSlotKeys" #[replaceFormSlotKey(item)]="data">
+        <slot :name="item" v-bind="data || {}" />
+      </template>
+      <!-- 相当于
+      <template #desc="data">
+        <slot name="form-desc" v-bind="data || {}" />
+      </template> -->
+    </BasicForm>
     <a-table
       ref="tableElRef"
       v-bind="getBindValues"

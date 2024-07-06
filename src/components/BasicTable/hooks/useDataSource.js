@@ -11,7 +11,7 @@ export function useDataSource(getProps, {
   getPaginationInfo,
   setPagination,
   setLoading,
-  // getFieldsValue,
+  getFieldsValue,
   clearSelectedRowKeys,
 }, emit) {
   const dataSourceRef = ref([])
@@ -111,8 +111,8 @@ export function useDataSource(getProps, {
 
       let params = merge(
         pageParams,
-        // TODO: 获取表单数据，加入到请求参数中
-        // useSearchForm ? getFieldsValue() : {},
+        // 获取表单数据，加入到请求参数中
+        useSearchForm ? getFieldsValue() : {},
         useSearchForm ? {} : {},
         searchInfo, // 额外的请求参数
         opt?.searchInfo ?? {},

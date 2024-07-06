@@ -83,6 +83,29 @@ function setProps() {
       }"
       row-key="id"
       show-table-setting
+      :use-search-form="true"
+      :form-config="{
+        labelWidth: 80,
+        actionColOptions: { span: 8 },
+        schemas: [
+          {
+            field: 'name',
+            label: '规则名称',
+            component: 'Input',
+            colProps: {
+              span: 8,
+            },
+          },
+          {
+            field: 'desc',
+            label: '描述',
+            component: 'Input',
+            // slot: 'desc',
+            colProps: {
+              span: 8,
+            },
+          }],
+      }"
       @register="register"
     >
       <template #toolbar>
@@ -153,6 +176,10 @@ function setProps() {
           </a>
         </template>
       </template>
+
+      <!-- <template #form-desc>
+        <div>form-desc</div>
+      </template> -->
     </BasicTable>
   </div>
 </template>
